@@ -260,8 +260,9 @@ body.dark .hero-gradient-overlay {
 .glass-panel::before { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, rgba(255,255,255,0.08) 0%, transparent 50%); border-radius: inherit; pointer-events: none; }
 .depth-badge { position: absolute; top: -18px; right: 32px; font-family: var(--font-tech); font-size: 0.6rem; letter-spacing: 2px; text-transform: uppercase; color: var(--accent); background: var(--bg); border: 1px solid var(--accent); padding: 0.35rem 0.9rem; border-radius: 50px; }
 
-.rait { width: 100%; aspect-ratio: 4/5; object-fit: cover; filter: grayscale(100%) contrast(1.1); border-radius: 4px; border: 1px solid var(--line); }
-.portrait-wrapper { position: relative; }
+/* FIXED PORTRAIT RESPONSIVENESS */
+.about-portrait { width: 100%; max-width: 100%; height: auto; display: block; aspect-ratio: 4/5; object-fit: cover; filter: grayscale(100%) contrast(1.1); border-radius: 4px; border: 1px solid var(--line); }
+.portrait-wrapper { position: relative; width: 100%; }
 .portrait-frame { position: absolute; inset: -12px; border: 1px solid var(--line); border-radius: 4px; pointer-events: none; transition: border-color 0.4s; z-index: -1; }
 .portrait-frame-outer { position: absolute; inset: -24px; border: 1px solid rgba(227,57,37,0.15); border-radius: 4px; pointer-events: none; z-index: -1; }
 .portrait-label { position: absolute; bottom: -1rem; left: 0; right: 0; text-align: center; font-family: var(--font-tech); font-size: 0.6rem; letter-spacing: 3px; text-transform: uppercase; color: var(--text-muted); }
@@ -395,7 +396,7 @@ footer { position: relative; padding: 6rem 5% 2rem; background: var(--bg); color
   .card1, .card2, .card3 { margin-top: 0; }
   
   .toc-grid-container { grid-template-columns: 1fr; }
-  .rait { aspect-ratio: 1/1; }
+  .about-portrait { aspect-ratio: 1/1; }
   .footer-top { grid-template-columns: 1fr; gap: 3rem; }
   .footer-bottom { flex-direction: column; gap: 1.5rem; align-items: center; text-align: center; }
   
