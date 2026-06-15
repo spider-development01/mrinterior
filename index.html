@@ -8,7 +8,9 @@
 <meta name="description" content="Mr. Interior Designer provides various Interior Design Services. We have been serving Delhi/NCR for more than a year, providing user-friendly designs for improving lifestyle and living standards of individuals, families and business owners by creating healthy, luxurious and sustainable interior spaces/habitats.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Anton&family=Manrope:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<!-- Preload critical fonts to eliminate render-blocking -->
+<link rel="preload" href="https://fonts.googleapis.com/css2?family=Anton&family=Manrope:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Manrope:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap"></noscript>
 
 <style>
 /* ── ROOT PALETTE ──────────────────────────────────────────── */
@@ -37,37 +39,24 @@
 
 /* ── STRICT OVERFLOW LOCKS (Fixes Mobile Zoom/Scroll Bug) ──── */
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-html {
-  scroll-behavior: auto;
-  width: 100%;
-  max-width: 100%;
-  overflow-x: hidden;
-}
+html { scroll-behavior: auto; width: 100%; max-width: 100%; overflow-x: hidden; }
 body {
-  width: 100%;
-  max-width: 100%;
-  overflow-x: hidden;
-  position: relative;
-  overscroll-behavior-x: none; /* Prevents horizontal swipe navigation glow */
+  width: 100%; max-width: 100%; overflow-x: hidden; position: relative;
+  overscroll-behavior-x: none;
   background: var(--bg); color: var(--text);
   font-family: var(--font-body); -webkit-font-smoothing: antialiased;
   cursor: none;
 }
 
 body.dark {
-  --bg: var(--bg-dark);
-  --text: var(--text-dark);
-  --text-muted: var(--text-muted-dark);
-  --line: var(--line-dark);
-  --glass: var(--glass-dark);
+  --bg: var(--bg-dark); --text: var(--text-dark);
+  --text-muted: var(--text-muted-dark); --line: var(--line-dark); --glass: var(--glass-dark);
 }
 
-/* ── PRELOADER ─────────────────────────────────────────────── */
+/* ── PRELOADER (Optimized for fast LCP) ────────────────────── */
 #preloader {
-  position: fixed; inset: 0; z-index: 99999;
-  background: #040404; /* Boot up dark */
-  display: flex; justify-content: center; align-items: center;
-  pointer-events: none;
+  position: fixed; inset: 0; z-index: 99999; background: #040404;
+  display: flex; justify-content: center; align-items: center; pointer-events: none;
 }
 .preloader-logo {
   font-family: var(--font-tech); font-size: clamp(1.5rem, 4vw, 3rem);
@@ -100,24 +89,22 @@ body, .hero-gradient-overlay, #depth-fog, .nav-bg, .mobile-drawer, .btn-contact,
 .warp-wrapper { position: relative; z-index: 10; transform-origin: center center; will-change: transform, filter; width: 100%; overflow: hidden; }
 body.warping .warp-wrapper {
   filter: blur(10px) contrast(1.3) drop-shadow(6px 0 0 rgba(227,57,37,0.6)) drop-shadow(-6px 0 0 rgba(0,220,255,0.5));
-  transform: scale(1.06);
-  transition: filter 0.8s ease, transform 0.8s ease;
+  transform: scale(1.06); transition: filter 0.8s ease, transform 0.8s ease;
 }
 
 /* ── GLITCH HOVER ──────────────────────────────────────────── */
 @keyframes glitch-anim {
-  0%   { clip-path: inset(10% 0 80% 0); transform: translate(-3px,2px); }
-  20%  { clip-path: inset(80% 0 5% 0);  transform: translate(3px,-2px); }
-  40%  { clip-path: inset(30% 0 40% 0); transform: translate(-3px,2px); }
-  60%  { clip-path: inset(60% 0 10% 0); transform: translate(3px,-2px); }
-  80%  { clip-path: inset(15% 0 70% 0); transform: translate(-3px,2px); }
+  0% { clip-path: inset(10% 0 80% 0); transform: translate(-3px,2px); }
+  20% { clip-path: inset(80% 0 5% 0); transform: translate(3px,-2px); }
+  40% { clip-path: inset(30% 0 40% 0); transform: translate(-3px,2px); }
+  60% { clip-path: inset(60% 0 10% 0); transform: translate(3px,-2px); }
+  80% { clip-path: inset(15% 0 70% 0); transform: translate(-3px,2px); }
   100% { clip-path: inset(50% 0 30% 0); transform: translate(0); }
 }
 .glitch-hover { position: relative; }
 .glitch-hover:hover::before {
   content: attr(data-text); position: absolute; left: -2px; top: 0;
-  color: var(--text); background: var(--bg); overflow: hidden;
-  text-shadow: 2px 0 var(--accent);
+  color: var(--text); background: var(--bg); overflow: hidden; text-shadow: 2px 0 var(--accent);
   animation: glitch-anim 0.28s infinite linear alternate-reverse;
 }
 
@@ -137,119 +124,60 @@ body.warping .warp-wrapper {
 body.cursor-expand .cursor-ring { width: 90px; height: 90px; background: var(--text); opacity: 0.06; border-color: transparent; }
 
 /* ── CANVAS & BACKGROUNDS ──────────────────────────────────── */
-#canvas-container { position: fixed; top: 0; left: 0; width: 100%; height: 100vh; z-index: 1; pointer-events: none; }
+/* Deferred 3D Canvas initially hidden to prevent rendering flashes */
+#canvas-container { position: fixed; top: 0; left: 0; width: 100%; height: 100vh; z-index: 1; pointer-events: none; opacity: 0; transition: opacity 1s ease; }
+#canvas-container.loaded { opacity: 1; }
 canvas { width: 100%; height: 100%; display: block; }
 
-#depth-fog {
-  position: fixed; inset: 0; z-index: 2; pointer-events: none;
-  background: radial-gradient(circle 100vmax at 50% 50%, transparent 20%, var(--bg) 100%);
-  opacity: 0.5;
-}
+#depth-fog { position: fixed; inset: 0; z-index: 2; pointer-events: none; background: radial-gradient(circle 100vmax at 50% 50%, transparent 20%, var(--bg) 100%); opacity: 0.5; }
 
 .cad-diagram {
-  position: absolute; top: 50%; left: 50%; width: 130vh; height: 130vh;
-  margin-top: -65vh; margin-left: -65vh; z-index: 3; pointer-events: none; opacity: 0.09;
+  position: absolute; top: 50%; left: 50%; width: 130vh; height: 130vh; margin-top: -65vh; margin-left: -65vh; z-index: 3; pointer-events: none; opacity: 0.09;
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 500 500' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='250' cy='250' r='200' fill='none' stroke='%23000' stroke-width='1' stroke-dasharray='4 4'/%3E%3Ccircle cx='250' cy='250' r='150' fill='none' stroke='%23000' stroke-width='0.5'/%3E%3Ccircle cx='250' cy='250' r='90' fill='none' stroke='%23000' stroke-width='0.5' stroke-dasharray='2 6'/%3E%3Crect x='150' y='150' width='200' height='200' fill='none' stroke='%23000' stroke-width='1' transform='rotate(45 250 250)'/%3E%3Cline x1='50' y1='250' x2='450' y2='250' stroke='%23000' stroke-width='0.5'/%3E%3Cline x1='250' y1='50' x2='250' y2='450' stroke='%23000' stroke-width='0.5'/%3E%3C/svg%3E");
-  background-size: contain; background-repeat: no-repeat; background-position: center;
-  will-change: transform;
+  background-size: contain; background-repeat: no-repeat; background-position: center; will-change: transform;
 }
 body.dark .cad-diagram { filter: invert(1); opacity: 0.12; }
 
-/* ── VOLUMETRIC BLOOM CANVAS ───────────────────────────────── */
-#bloom-layer {
-  position: fixed; inset: 0; z-index: 3; pointer-events: none;
-  mix-blend-mode: screen; opacity: 0;
-  background: radial-gradient(circle 80vmax at 50% 50%, rgba(227,57,37,0.06) 0%, transparent 60%);
-  transition: opacity 1s;
-}
+#bloom-layer { position: fixed; inset: 0; z-index: 3; pointer-events: none; mix-blend-mode: screen; opacity: 0; background: radial-gradient(circle 80vmax at 50% 50%, rgba(227,57,37,0.06) 0%, transparent 60%); transition: opacity 1s; }
 body.dark #bloom-layer { opacity: 1; }
 
-/* ── NAVBAR (Fixed, Responsive, Smeared Edge) ──────────────── */
-nav {
-  position: fixed; top: 0; left: 0; right: 0; height: 80px; padding: 0 5%;
-  display: flex; align-items: center; justify-content: space-between; z-index: 500;
-  pointer-events: none; /* Prevents invisible block from stealing clicks */
-}
+/* ── NAVBAR ────────────────────────────────────────────────── */
+nav { position: fixed; top: 0; left: 0; right: 0; height: 80px; padding: 0 5%; display: flex; align-items: center; justify-content: space-between; z-index: 500; pointer-events: none; }
 nav > * { pointer-events: auto; }
-.nav-bg {
-  position: absolute; top: 0; left: 0; right: 0; height: 180px;
-  background: var(--glass);
-  backdrop-filter: blur(24px) saturate(180%);
-  -webkit-backdrop-filter: blur(24px) saturate(180%);
-  mask-image: linear-gradient(to bottom, black 0%, black 25%, transparent 100%);
-  -webkit-mask-image: linear-gradient(to bottom, black 0%, black 25%, transparent 100%);
-  z-index: -1; pointer-events: none;
-}
+.nav-bg { position: absolute; top: 0; left: 0; right: 0; height: 180px; background: var(--glass); backdrop-filter: blur(24px) saturate(180%); -webkit-backdrop-filter: blur(24px) saturate(180%); mask-image: linear-gradient(to bottom, black 0%, black 25%, transparent 100%); -webkit-mask-image: linear-gradient(to bottom, black 0%, black 25%, transparent 100%); z-index: -1; pointer-events: none; }
 .logo { font-family: var(--font-display); font-size: 2rem; text-decoration: none; color: var(--text); transition: color 1.4s; position: relative; z-index: 2; }
 .logo span { color: var(--accent); }
 .nav-links { display: flex; gap: 3rem; align-items: center; position: relative; z-index: 2; }
 .nav-links a { font-family: var(--font-tech); font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; text-decoration: none; color: var(--text); transition: opacity 0.3s; }
 .nav-links a:hover { opacity: 0.45; }
 
-/* Accessible Menu Toggle */
 .menu-toggle { 
-  display: none; 
-  font-family: var(--font-tech); font-size: 0.75rem; font-weight: 700; 
-  text-transform: uppercase; letter-spacing: 2px; color: var(--text); 
-  background: transparent; border: none; position: relative; z-index: 2;
-  cursor: pointer;
-  padding: 20px; /* Massive touch target */
-  margin-right: -20px; /* Maintain optical alignment */
-  -webkit-tap-highlight-color: transparent; /* Remove mobile tap flash */
-  outline: none;
+  display: none; font-family: var(--font-tech); font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; color: var(--text); 
+  background: transparent; border: none; position: relative; z-index: 2; cursor: pointer; padding: 20px; margin-right: -20px; -webkit-tap-highlight-color: transparent; outline: none;
 }
 
 /* ── MOBILE DRAWER ─────────────────────────────────────────── */
-.mobile-drawer {
-  position: fixed; top: 0; left: -100%; width: 100%; height: 100vh;
-  background: var(--bg); z-index: 9000; padding: 2rem 5%;
-  display: flex; flex-direction: column; justify-content: space-between;
-  transition: transform 0.6s cubic-bezier(0.8,0,0.1,1), background 1.4s;
-  border-right: 1px solid var(--line);
-}
+.mobile-drawer { position: fixed; top: 0; left: -100%; width: 100%; height: 100vh; background: var(--bg); z-index: 9000; padding: 2rem 5%; display: flex; flex-direction: column; justify-content: space-between; transition: transform 0.6s cubic-bezier(0.8,0,0.1,1), background 1.4s; border-right: 1px solid var(--line); }
 .mobile-drawer.active { transform: translateX(100%); }
 .drawer-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--line); padding-bottom: 2rem; }
-
-/* Accessible Close Toggle */
-.drawer-close { 
-  font-family: var(--font-tech); font-size: 0.75rem; font-weight: 700; 
-  text-transform: uppercase; letter-spacing: 2px; color: var(--text); 
-  background: transparent; border: none; cursor: pointer; 
-  padding: 20px; margin-right: -20px;
-  -webkit-tap-highlight-color: transparent; outline: none;
-}
+.drawer-close { font-family: var(--font-tech); font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; color: var(--text); background: transparent; border: none; cursor: pointer; padding: 20px; margin-right: -20px; -webkit-tap-highlight-color: transparent; outline: none; }
 .drawer-links { display: flex; flex-direction: column; gap: 2rem; padding: 4rem 0; flex-grow: 1; }
 .drawer-links a { font-family: var(--font-display); font-size: 4rem; line-height: 1; text-transform: uppercase; text-decoration: none; color: var(--text); }
 .drawer-links span { font-family: var(--font-tech); font-size: 0.8rem; color: var(--accent); margin-right: 1rem; vertical-align: middle; }
-.btn-contact {
-  font-family: var(--font-tech); font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 2px;
-  text-decoration: none; color: var(--bg); background: var(--text); padding: 0.9rem 2.2rem; border-radius: 50px;
-  display: inline-flex; align-items: center; gap: 0.5rem; border: 1px solid var(--text);
-}
+.btn-contact { font-family: var(--font-tech); font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; text-decoration: none; color: var(--bg); background: var(--text); padding: 0.9rem 2.2rem; border-radius: 50px; display: inline-flex; align-items: center; gap: 0.5rem; border: 1px solid var(--text); }
 
 /* ── SECTIONS BASE ─────────────────────────────────────────── */
 section { min-height: 100vh; position: relative; padding: 8rem 5%; display: flex; flex-direction: column; justify-content: center; }
-
-/* ── TECH LABEL ────────────────────────────────────────────── */
 .tech-label { font-family: var(--font-tech); font-size: 0.65rem; text-transform: uppercase; letter-spacing: 3px; color: var(--text-muted); display: flex; align-items: center; gap: 1rem; }
 .tech-label::before { content: ''; display: inline-block; width: 20px; height: 1px; background: var(--accent); }
-
-/* ── HEADINGS ──────────────────────────────────────────────── */
 .heading-lg { font-family: var(--font-display); font-size: clamp(4rem,8vw,9rem); line-height: 1.02; text-transform: uppercase; letter-spacing: 0.03em; margin: 2rem 0; }
 .text-body { font-size: 1.1rem; line-height: 1.85; color: var(--text-muted); max-width: 480px; }
 .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; }
 
 /* ── HERO ──────────────────────────────────────────────────── */
 #hero { text-align: center; align-items: center; padding: 0; overflow: hidden; min-height: 100vh; position: relative; width: 100%; }
-
-.hero-gradient-overlay {
-  position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; z-index: 15; pointer-events: none;
-  background: radial-gradient(circle at 50% 50%, var(--bg) 0%, rgba(240,239,237,0.88) 12%, transparent 35%);
-}
-body.dark .hero-gradient-overlay {
-  background: radial-gradient(circle at 50% 50%, var(--bg) 0%, rgba(4,4,4,0.88) 12%, transparent 35%);
-}
-
+.hero-gradient-overlay { position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; z-index: 15; pointer-events: none; background: radial-gradient(circle at 50% 50%, var(--bg) 0%, rgba(240,239,237,0.88) 12%, transparent 35%); }
+body.dark .hero-gradient-overlay { background: radial-gradient(circle at 50% 50%, var(--bg) 0%, rgba(4,4,4,0.88) 12%, transparent 35%); }
 .hero-text-mask { position: relative; z-index: 20; padding: 6rem; background: none; }
 .hero-title { font-family: var(--font-display); font-size: clamp(5rem,16vw,20rem); line-height: 1.02; text-transform: uppercase; letter-spacing: 0.04em; color: var(--text); margin: 0; padding: 0; }
 .hero-subtitle { font-family: var(--font-tech); font-size: clamp(0.7rem, 1.2vw, 1rem); letter-spacing: 6px; text-transform: uppercase; color: var(--text-muted); margin-top: 2rem; opacity: 0; }
@@ -259,33 +187,22 @@ body.dark .hero-gradient-overlay {
 .scroll-line { width: 40px; height: 1px; background: var(--accent); transform-origin: left; animation: scrollPulse 2s ease-in-out infinite; }
 @keyframes scrollPulse { 0%,100%{transform:scaleX(1);opacity:1;} 50%{transform:scaleX(0.3);opacity:0.4;} }
 
-/* ── ABOUT — EDITORIAL UPGRADE ─────────────────────────────── */
+/* ── ABOUT ─────────────────────────────────────────────── */
 #about { position: relative; overflow: hidden; }
-
 .about-editorial { position: relative; z-index: 5; }
-.about-manifesto {
-  font-family: var(--font-display); font-size: clamp(2rem, 4vw, 5rem); line-height: 1.05;
-  text-transform: uppercase; letter-spacing: -1px; margin: 3rem 0 1rem; color: var(--text);
-}
+.about-manifesto { font-family: var(--font-display); font-size: clamp(2rem, 4vw, 5rem); line-height: 1.05; text-transform: uppercase; letter-spacing: -1px; margin: 3rem 0 1rem; color: var(--text); }
 .about-manifesto .accent-word { color: var(--accent); }
 .about-manifesto .outline-word { -webkit-text-stroke: 1.5px var(--text); color: transparent; transition: color 0.4s, -webkit-text-stroke 0.4s; }
 .about-manifesto .outline-word:hover { color: var(--text); -webkit-text-stroke: 1.5px transparent; }
-
 .about-statement { font-family: var(--font-tech); font-size: 0.85rem; letter-spacing: 2px; text-transform: uppercase; color: var(--accent); margin: 2.5rem 0 1rem; line-height: 1.6; }
-
-.glass-panel {
-  background: var(--glass); backdrop-filter: blur(28px) saturate(160%); -webkit-backdrop-filter: blur(28px) saturate(160%);
-  border: 1px solid var(--line); border-radius: 3px; padding: 2.5rem 3rem; position: relative;
-}
+.glass-panel { background: var(--glass); backdrop-filter: blur(28px) saturate(160%); -webkit-backdrop-filter: blur(28px) saturate(160%); border: 1px solid var(--line); border-radius: 3px; padding: 2.5rem 3rem; position: relative; }
 .glass-panel::before { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, rgba(255,255,255,0.08) 0%, transparent 50%); border-radius: inherit; pointer-events: none; }
 .depth-badge { position: absolute; top: -18px; right: 32px; font-family: var(--font-tech); font-size: 0.6rem; letter-spacing: 2px; text-transform: uppercase; color: var(--accent); background: var(--bg); border: 1px solid var(--accent); padding: 0.35rem 0.9rem; border-radius: 50px; }
-
 .about-portrait { width: 100%; max-width: 100%; height: auto; display: block; aspect-ratio: 4/5; object-fit: cover; filter: grayscale(100%) contrast(1.1); border-radius: 4px; border: 1px solid var(--line); }
 .portrait-wrapper { position: relative; width: 100%; }
 .portrait-frame { position: absolute; inset: -12px; border: 1px solid var(--line); border-radius: 4px; pointer-events: none; transition: border-color 0.4s; z-index: -1; }
 .portrait-frame-outer { position: absolute; inset: -24px; border: 1px solid rgba(227,57,37,0.15); border-radius: 4px; pointer-events: none; z-index: -1; }
 .portrait-label { position: absolute; bottom: -1rem; left: 0; right: 0; text-align: center; font-family: var(--font-tech); font-size: 0.6rem; letter-spacing: 3px; text-transform: uppercase; color: var(--text-muted); }
-
 .stat-row { display: grid; grid-template-columns: repeat(3,1fr); gap: 1.5rem; margin-top: 3rem; }
 .stat-item { border-top: 1px solid var(--line); padding-top: 1.5rem; }
 .stat-num { font-family: var(--font-display); font-size: 2.8rem; line-height: 1; color: var(--text); }
@@ -293,20 +210,13 @@ body.dark .hero-gradient-overlay {
 
 /* ── SERVICES ──────────────────────────────────────────────── */
 #services { align-items: flex-start; }
-
 .services-wrapper { position: relative; width: 100%; margin-top: 4rem; padding-bottom: 3rem; display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; align-items: stretch; }
 .services-line-diag { display: none; }
-
-.service-card {
-  position: relative; background: rgba(8,8,8,0.72); backdrop-filter: blur(28px) saturate(160%); -webkit-backdrop-filter: blur(28px) saturate(160%);
-  border: 1px solid rgba(255,255,255,0.1); z-index: 3; padding: 3rem 2.5rem; color: #f4f4f4; display: flex; flex-direction: column; gap: 1.5rem;
-  transition: transform 0.5s cubic-bezier(0.23,1,0.32,1), border-color 0.4s, box-shadow 0.5s; overflow: hidden;
-}
+.service-card { position: relative; background: rgba(8,8,8,0.72); backdrop-filter: blur(28px) saturate(160%); -webkit-backdrop-filter: blur(28px) saturate(160%); border: 1px solid rgba(255,255,255,0.1); z-index: 3; padding: 3rem 2.5rem; color: #f4f4f4; display: flex; flex-direction: column; gap: 1.5rem; transition: transform 0.5s cubic-bezier(0.23,1,0.32,1), border-color 0.4s, box-shadow 0.5s; overflow: hidden; }
 .service-card::before { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, rgba(255,255,255,0.05) 0%, transparent 60%); pointer-events: none; }
 body.dark .service-card { background: rgba(255,255,255,0.04); }
 .service-card:hover { transform: translateY(-14px); z-index: 10; border-color: var(--accent); box-shadow: 0 30px 80px rgba(0,0,0,0.4), 0 0 0 1px var(--accent-glow), inset 0 1px 0 rgba(255,255,255,0.1); }
 .service-card:hover .sc-num { color: #fff; }
-
 .card1 { margin-top: 0; } .card2 { margin-top: 3rem; } .card3 { margin-top: 1.5rem; }
 .sc-glow-line { position: absolute; bottom: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, var(--accent), transparent); opacity: 0; transition: opacity 0.4s; }
 .service-card:hover .sc-glow-line { opacity: 1; }
@@ -350,9 +260,7 @@ footer { position: relative; padding: 6rem 5% 2rem; background: var(--bg); color
 .footer-col a { font-size: 0.9rem; text-decoration: none; color: var(--text-muted); transition: color 0.3s; }
 .footer-col a:hover { color: var(--accent); }
 
-/* Added substantial margin-top so the button doesn't cramp the layout */
 .footer-divider { position: relative; width: 100%; height: 1px; background: var(--line); z-index: 2; display: flex; align-items: center; justify-content: flex-end; margin-top: 4rem; }
-
 .footer-bottom { display: flex; justify-content: space-between; font-size: 0.8rem; color: var(--text-muted); z-index: 2; }
 .footer-bottom-links { display: flex; gap: 2rem; }
 .footer-bottom-links a { font-family: var(--font-tech); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); text-decoration: none; }
@@ -361,26 +269,18 @@ footer { position: relative; padding: 6rem 5% 2rem; background: var(--bg); color
 /* ── UI SYSTEM WHATSAPP FIXED BUTTON ───────────────────────── */
 .whatsapp-float {
   position: fixed; bottom: 35px; right: 35px; width: 60px; height: 60px;
-  background: var(--glass);
-  backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+  background: var(--glass); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
   border: 1px solid var(--text); color: var(--text); border-radius: 50%;
   display: flex; justify-content: center; align-items: center; z-index: 10000;
   transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 .whatsapp-float svg { width: 28px; height: 28px; fill: currentColor; }
-.whatsapp-float::after {
-  content: ''; position: absolute; inset: -1px; border-radius: 50%;
-  box-shadow: 0 0 24px var(--accent-glow); opacity: 0; transition: opacity 0.4s; pointer-events: none;
-}
+.whatsapp-float::after { content: ''; position: absolute; inset: -1px; border-radius: 50%; box-shadow: 0 0 24px var(--accent-glow); opacity: 0; transition: opacity 0.4s; pointer-events: none; }
 .whatsapp-float:hover { transform: scale(1.15); background: var(--text); color: var(--bg); border-color: transparent; }
 .whatsapp-float:hover::after { opacity: 1; }
 
 /* ── VELOCITY BLUR OVERLAY ─────────────────────────────────── */
-#velocity-blur {
-  position: fixed; inset: 0; z-index: 9; pointer-events: none;
-  background: linear-gradient(0deg, transparent 0%, var(--bg) 100%);
-  opacity: 0; transition: opacity 0.2s; mix-blend-mode: normal;
-}
+#velocity-blur { position: fixed; inset: 0; z-index: 9; pointer-events: none; background: linear-gradient(0deg, transparent 0%, var(--bg) 100%); opacity: 0; transition: opacity 0.2s; mix-blend-mode: normal; }
 
 /* ── REVEAL ANIMATIONS ─────────────────────────────────────── */
 .reveal-text { overflow: hidden; display: block; }
@@ -398,7 +298,6 @@ footer { position: relative; padding: 6rem 5% 2rem; background: var(--bg); color
 @media (max-width: 768px) {
   .noise { display: none; }
   
-  /* Perfected Mobile Navbar Scaling */
   nav { height: 70px; padding: 0 6%; }
   .nav-bg { height: 140px; }
   .logo { font-size: 1.5rem; }
@@ -419,7 +318,6 @@ footer { position: relative; padding: 6rem 5% 2rem; background: var(--bg); color
   .footer-top { grid-template-columns: 1fr; gap: 3rem; }
   .footer-bottom { flex-direction: column; gap: 1.5rem; align-items: center; text-align: center; }
   
-  /* Footer mobile alignments */
   .footer-divider { justify-content: center; background: transparent; margin-top: 3rem; margin-bottom: 2rem; }
   .btn-contact { transform: translateY(0) !important; margin-top: 0; }
   
@@ -453,7 +351,8 @@ footer { position: relative; padding: 6rem 5% 2rem; background: var(--bg); color
 <div class="mobile-drawer" id="mobileDrawer">
   <div class="drawer-header">
     <span class="logo">SM<span>.</span></span>
-    <button class="drawer-close mag-target" id="closeMenu">Close</button>
+    <!-- ARIA label added for Accessibility 100/100 -->
+    <button class="drawer-close mag-target" id="closeMenu" aria-label="Close Mobile Menu">Close</button>
   </div>
   <div class="drawer-links">
     <a href="#about"    class="mag-target warp-link" data-text="Philosophy"><span>01</span>Philosophy</a>
@@ -461,8 +360,8 @@ footer { position: relative; padding: 6rem 5% 2rem; background: var(--bg); color
     <a href="#toc"      class="mag-target warp-link" data-text="Archive"><span>03</span>Archive</a>
   </div>
   <div class="drawer-footer">
-    <a href="https://wa.me/919654119643" target="_blank" class="btn-contact mag-target">Contact Me
-      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"/></svg>
+    <a href="https://wa.me/919654119643" target="_blank" rel="noopener noreferrer" class="btn-contact mag-target" aria-label="Contact Me via WhatsApp">Contact Me
+      <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"/></svg>
     </a>
   </div>
 </div>
@@ -490,14 +389,15 @@ footer { position: relative; padding: 6rem 5% 2rem; background: var(--bg); color
 <!-- NAVBAR -->
 <nav>
   <div class="nav-bg"></div>
-  <a href="#hero" class="logo mag-target warp-link">SM<span>.</span></a>
+  <a href="#hero" class="logo mag-target warp-link" aria-label="Go to top">SM<span>.</span></a>
   <div class="nav-links">
     <a href="#about"    class="mag-target warp-link glitch-hover" data-text="Philosophy">Philosophy</a>
     <a href="#services" class="mag-target warp-link glitch-hover" data-text="Services">Services</a>
     <a href="#toc"      class="mag-target warp-link glitch-hover" data-text="Archive">Archive</a>
-    <a href="https://wa.me/919654119643" target="_blank" class="mag-target" style="color:var(--accent);">Initiate</a>
+    <a href="https://wa.me/919654119643" target="_blank" rel="noopener noreferrer" class="mag-target" style="color:var(--accent);">Initiate</a>
   </div>
-  <button class="menu-toggle mag-target" id="openMenu">Menu</button>
+  <!-- ARIA label added for Accessibility 100/100 -->
+  <button class="menu-toggle mag-target" id="openMenu" aria-label="Open Mobile Menu">Menu</button>
 </nav>
 
 <div class="warp-wrapper">
@@ -510,7 +410,7 @@ footer { position: relative; padding: 6rem 5% 2rem; background: var(--bg); color
       <span style="color:var(--accent);">SCALE 1:100</span>
     </div>
 
-    <!-- ZERO-EDGE WRAPPER: Width mapped to strictly clipped percentage bounds -->
+    <!-- ZERO-EDGE WRAPPER -->
     <div class="hero-gradient-overlay"></div>
     <div class="hero-text-mask">
       <h1 class="hero-title">
@@ -572,8 +472,8 @@ footer { position: relative; padding: 6rem 5% 2rem; background: var(--bg); color
       <div class="reveal mag-target portrait-wrapper">
         <div class="portrait-frame"></div>
         <div class="portrait-frame-outer"></div>
-        <img src="me.png"
-             alt="Sagar Malik" class="about-portrait" loading="lazy" decoding="async">
+        <!-- WIDTH/HEIGHT Added for Lighthouse CLS Score -->
+        <img src="me.png" width="800" height="1000" alt="Sagar Malik Portrait" class="about-portrait" loading="lazy" decoding="async">
         <div class="portrait-label">[ Portrait — Delhi Studio, 2026 ]</div>
       </div>
     </div>
@@ -614,12 +514,13 @@ footer { position: relative; padding: 6rem 5% 2rem; background: var(--bg); color
   <section id="toc">
     <span class="tech-label reveal">TABLE OF CONTENTS</span>
     <div class="toc-grid-container reveal">
-      <div class="toc-item mag-target"><span class="toc-num">1</span><img src="https://images.unsplash.com/photo-1600697395543-ef3ee6e9af7b?auto=format&fit=crop&w=600&q=80" class="toc-img" alt="Aurelia Heights" loading="lazy" decoding="async"><span class="toc-title">Aurelia Heights</span><div class="toc-node"></div></div>
-      <div class="toc-item mag-target"><span class="toc-num">2</span><img src="https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&w=600&q=80"  class="toc-img" alt="Lumina Lime" loading="lazy" decoding="async"><span class="toc-title">Lumina Lime</span><div class="toc-node red"></div></div>
-      <div class="toc-item mag-target"><span class="toc-num">3</span><img src="https://images.unsplash.com/photo-1581291518857-4e27b48ff24e?auto=format&fit=crop&w=600&q=80" class="toc-img" alt="Soliris Cove" loading="lazy" decoding="async"><span class="toc-title">Soliris Cove</span><div class="toc-node"></div></div>
-      <div class="toc-item mag-target"><span class="toc-num">4</span><img src="https://images.unsplash.com/photo-1631049307264-da0ec9d70304?auto=format&fit=crop&w=600&q=80"  class="toc-img" alt="Velour Afterhours" loading="lazy" decoding="async"><span class="toc-title">Velour Afterhours</span><div class="toc-node red"></div></div>
-      <div class="toc-item mag-target"><span class="toc-num">5</span><img src="https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=600&q=80"  class="toc-img" alt="Madame Li Room" loading="lazy" decoding="async"><span class="toc-title">Madame Li Room</span><div class="toc-node"></div></div>
-      <div class="toc-item mag-target"><span class="toc-num">6</span><img src="https://images.unsplash.com/photo-1606744888344-493238951221?auto=format&fit=crop&w=600&q=80"      class="toc-img" alt="Vexlo Studio" loading="lazy" decoding="async"><span class="toc-title">Vexlo Studio</span><div class="toc-node"></div></div>
+      <!-- WIDTH/HEIGHT added to images to prevent CLS layout shift -->
+      <div class="toc-item mag-target"><span class="toc-num">1</span><img src="https://images.unsplash.com/photo-1600697395543-ef3ee6e9af7b?auto=format&fit=crop&w=600&q=80" width="240" height="160" class="toc-img" alt="Aurelia Heights" loading="lazy" decoding="async"><span class="toc-title">Aurelia Heights</span><div class="toc-node"></div></div>
+      <div class="toc-item mag-target"><span class="toc-num">2</span><img src="https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&w=600&q=80" width="240" height="160" class="toc-img" alt="Lumina Lime" loading="lazy" decoding="async"><span class="toc-title">Lumina Lime</span><div class="toc-node red"></div></div>
+      <div class="toc-item mag-target"><span class="toc-num">3</span><img src="https://images.unsplash.com/photo-1581291518857-4e27b48ff24e?auto=format&fit=crop&w=600&q=80" width="240" height="160" class="toc-img" alt="Soliris Cove" loading="lazy" decoding="async"><span class="toc-title">Soliris Cove</span><div class="toc-node"></div></div>
+      <div class="toc-item mag-target"><span class="toc-num">4</span><img src="https://images.unsplash.com/photo-1631049307264-da0ec9d70304?auto=format&fit=crop&w=600&q=80" width="240" height="160" class="toc-img" alt="Velour Afterhours" loading="lazy" decoding="async"><span class="toc-title">Velour Afterhours</span><div class="toc-node red"></div></div>
+      <div class="toc-item mag-target"><span class="toc-num">5</span><img src="https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=600&q=80" width="240" height="160" class="toc-img" alt="Madame Li Room" loading="lazy" decoding="async"><span class="toc-title">Madame Li Room</span><div class="toc-node"></div></div>
+      <div class="toc-item mag-target"><span class="toc-num">6</span><img src="https://images.unsplash.com/photo-1552058544-f2b08422138a?auto=format&fit=crop&w=600&q=80" width="240" height="160" class="toc-img" alt="Vexlo Studio" loading="lazy" decoding="async"><span class="toc-title">Vexlo Studio</span><div class="toc-node"></div></div>
     </div>
   </section>
 
@@ -628,14 +529,15 @@ footer { position: relative; padding: 6rem 5% 2rem; background: var(--bg); color
     <div class="footer-top">
       <div class="footer-col">
         <div class="footer-socials">
-          <a href="https://www.instagram.com/mr.interiordesigner/" target="_blank" rel="noopener noreferrer" class="social-circ mag-target">
-            <svg viewBox="0 0 448 512"><path d="M224.1 141c-63.6 0-114.9 51.3-114.9 114.9s51.3 114.9 114.9 114.9S339 319.5 339 255.9 287.7 141 224.1 141zm0 189.6c-41.1 0-74.7-33.5-74.7-74.7s33.5-74.7 74.7-74.7 74.7 33.5 74.7 74.7-33.6 74.7-74.7 74.7zm146.4-194.3c0 14.9-12 26.8-26.8 26.8-14.9 0-26.8-12-26.8-26.8s12-26.8 26.8-26.8 26.8 12 26.8 26.8zm76.1 27.2c-1.7-35.9-9.9-67.7-36.2-93.9-26.2-26.2-58-34.4-93.9-36.2-37-2.1-147.9-2.1-184.9 0-35.8 1.7-67.6 9.9-93.9 36.1s-34.4 58-36.2 93.9c-2.1 37-2.1 147.9 0 184.9 1.7 35.9 9.9 67.7 36.2 93.9s58 34.4 93.9 36.2c37 2.1 147.9 2.1 184.9 0 35.9-1.7 67.7-9.9 93.9-36.2 26.2-26.2 34.4-58 36.2-93.9 2.1-37 2.1-147.8 0-184.8zM398.8 388c-7.8 19.6-22.9 34.7-42.6 42.6-29.5 11.7-99.5 9-132.1 9s-102.7 2.6-132.1-9c-19.6-7.8-34.7-22.9-42.6-42.6-11.7-29.5-9-99.5-9-132.1s-2.6-102.7 9-132.1c7.8-19.6 22.9-34.7 42.6-42.6 29.5-11.7 99.5-9 132.1-9s102.7-2.6 132.1 9c19.6 7.8 34.7 22.9 42.6 42.6 11.7 29.5 9 99.5 9 132.1s2.7 102.7-9 132.1z"/></svg>
+          <!-- Added ARIA Labels & ARIA Hidden to SVGs for Accessibility 100/100 -->
+          <a href="https://www.instagram.com/mr.interiordesigner/" target="_blank" rel="noopener noreferrer" class="social-circ mag-target" aria-label="Visit our Instagram">
+            <svg aria-hidden="true" viewBox="0 0 448 512"><path d="M224.1 141c-63.6 0-114.9 51.3-114.9 114.9s51.3 114.9 114.9 114.9S339 319.5 339 255.9 287.7 141 224.1 141zm0 189.6c-41.1 0-74.7-33.5-74.7-74.7s33.5-74.7 74.7-74.7 74.7 33.5 74.7 74.7-33.6 74.7-74.7 74.7zm146.4-194.3c0 14.9-12 26.8-26.8 26.8-14.9 0-26.8-12-26.8-26.8s12-26.8 26.8-26.8 26.8 12 26.8 26.8zm76.1 27.2c-1.7-35.9-9.9-67.7-36.2-93.9-26.2-26.2-58-34.4-93.9-36.2-37-2.1-147.9-2.1-184.9 0-35.8 1.7-67.6 9.9-93.9 36.1s-34.4 58-36.2 93.9c-2.1 37-2.1 147.9 0 184.9 1.7 35.9 9.9 67.7 36.2 93.9s58 34.4 93.9 36.2c37 2.1 147.9 2.1 184.9 0 35.9-1.7 67.7-9.9 93.9-36.2 26.2-26.2 34.4-58 36.2-93.9 2.1-37 2.1-147.8 0-184.8zM398.8 388c-7.8 19.6-22.9 34.7-42.6 42.6-29.5 11.7-99.5 9-132.1 9s-102.7 2.6-132.1-9c-19.6-7.8-34.7-22.9-42.6-42.6-11.7-29.5-9-99.5-9-132.1s-2.6-102.7 9-132.1c7.8-19.6 22.9-34.7 42.6-42.6 29.5-11.7 99.5-9 132.1-9s102.7-2.6 132.1 9c19.6 7.8 34.7 22.9 42.6 42.6 11.7 29.5 9 99.5 9 132.1s2.7 102.7-9 132.1z"/></svg>
           </a>
-          <a href="https://twitter.com/mrinteriordes9r" target="_blank" rel="noopener noreferrer" class="social-circ mag-target">
-            <svg viewBox="0 0 512 512"><path d="M389.2 48h70.6L305.6 224.2 487 464H345L233.7 318.6 106.5 464H35.8L200.7 275.5 26.8 48H172.4L272.9 180.9 389.2 48zM364.4 421.8h39.1L151.1 88h-42L364.4 421.8z"/></svg>
+          <a href="https://twitter.com/mrinteriordes9r" target="_blank" rel="noopener noreferrer" class="social-circ mag-target" aria-label="Visit our Twitter">
+            <svg aria-hidden="true" viewBox="0 0 512 512"><path d="M389.2 48h70.6L305.6 224.2 487 464H345L233.7 318.6 106.5 464H35.8L200.7 275.5 26.8 48H172.4L272.9 180.9 389.2 48zM364.4 421.8h39.1L151.1 88h-42L364.4 421.8z"/></svg>
           </a>
-          <a href="https://www.facebook.com/jzzsm" target="_blank" rel="noopener noreferrer" class="social-circ mag-target">
-            <svg viewBox="0 0 320 512"><path d="M279.14 288l14.22-92.66h-88.91v-60.13c0-25.35 12.42-50.06 52.24-50.06h40.42V6.26S260.43 0 225.36 0c-73.22 0-121.08 44.38-121.08 124.72v70.62H22.89V288h81.39v224h100.17V288z"/></svg>
+          <a href="https://www.facebook.com/jzzsm" target="_blank" rel="noopener noreferrer" class="social-circ mag-target" aria-label="Visit our Facebook">
+            <svg aria-hidden="true" viewBox="0 0 320 512"><path d="M279.14 288l14.22-92.66h-88.91v-60.13c0-25.35 12.42-50.06 52.24-50.06h40.42V6.26S260.43 0 225.36 0c-73.22 0-121.08 44.38-121.08 124.72v70.62H22.89V288h81.39v224h100.17V288z"/></svg>
           </a>
         </div>
         <div class="footer-address">
@@ -645,15 +547,15 @@ footer { position: relative; padding: 6rem 5% 2rem; background: var(--bg); color
           +91 96541 19643
         </div>
       </div>
-      <div class="footer-col"><h4>Menu</h4><ul><li><a href="#about" class="mag-target warp-link">Philosophy</a></li><li><a href="#services" class="mag-target warp-link">Services</a></li><li><a href="#toc" class="mag-target warp-link">Archive</a></li><li><a href="https://wa.me/919654119643" target="_blank" class="mag-target">Initiate</a></li></ul></div>
-      <div class="footer-col"><h4>Social</h4><ul><li><a href="https://www.instagram.com/mr.interiordesigner/" target="_blank" class="mag-target">Instagram</a></li><li><a href="https://twitter.com/mrinteriordes9r" target="_blank" class="mag-target">Twitter</a></li><li><a href="https://www.facebook.com/jzzsm" target="_blank" class="mag-target">Facebook</a></li></ul></div>
+      <div class="footer-col"><h4>Menu</h4><ul><li><a href="#about" class="mag-target warp-link">Philosophy</a></li><li><a href="#services" class="mag-target warp-link">Services</a></li><li><a href="#toc" class="mag-target warp-link">Archive</a></li><li><a href="https://wa.me/919654119643" target="_blank" rel="noopener noreferrer" class="mag-target">Initiate</a></li></ul></div>
+      <div class="footer-col"><h4>Social</h4><ul><li><a href="https://www.instagram.com/mr.interiordesigner/" target="_blank" rel="noopener noreferrer" class="mag-target">Instagram</a></li><li><a href="https://twitter.com/mrinteriordes9r" target="_blank" rel="noopener noreferrer" class="mag-target">Twitter</a></li><li><a href="https://www.facebook.com/jzzsm" target="_blank" rel="noopener noreferrer" class="mag-target">Facebook</a></li></ul></div>
       <div class="footer-col"><h4>Legal</h4><ul><li><a href="#" class="mag-target">Privacy Policy</a></li><li><a href="#" class="mag-target">Terms of Service</a></li></ul></div>
     </div>
 
     <div class="footer-divider">
-      <a href="https://wa.me/919654119643" target="_blank" class="btn-contact mag-target" style="transform:translateY(-50%);">
+      <a href="https://wa.me/919654119643" target="_blank" rel="noopener noreferrer" class="btn-contact mag-target" aria-label="Get Started via WhatsApp" style="transform:translateY(-50%);">
         Get Started
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"/></svg>
+        <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"/></svg>
       </a>
     </div>
 
@@ -666,308 +568,303 @@ footer { position: relative; padding: 6rem 5% 2rem; background: var(--bg); color
   </footer>
 </div>
 
-<!-- FLOATING WHATSAPP BUTTON (Brutalist UI Matched) -->
+<!-- FLOATING WHATSAPP BUTTON -->
 <a href="https://wa.me/919654119643" class="whatsapp-float mag-target" target="_blank" rel="noopener noreferrer" aria-label="Contact on WhatsApp">
-  <svg viewBox="0 0 448 512" xmlns="http://www.w3.org/2000/svg">
+  <svg aria-hidden="true" viewBox="0 0 448 512" xmlns="http://www.w3.org/2000/svg">
     <path d="M380.9 97.1C339 55.1 283.2 32 223.9 32c-122.4 0-222 99.6-222 222 0 39.1 10.2 77.3 29.6 111L0 480l117.7-30.9c32.4 17.7 68.9 27 106.1 27h.1c122.3 0 224.1-99.6 224.1-222 0-59.3-25.2-115-67.1-157.1zm-157 341.6c-33.2 0-65.7-8.9-94-25.7l-6.7-4-69.8 18.3L72 359.2l-4.4-7c-18.5-29.4-28.2-63.3-28.2-98.2 0-101.7 82.8-184.5 184.6-184.5 49.3 0 95.6 19.2 130.4 54.1 34.8 34.9 56.2 81.2 56.1 130.5 0 101.8-84.9 184.6-186.6 184.6zm101.2-138.2c-5.5-2.8-32.8-16.2-37.9-18-5.1-1.9-8.8-2.8-12.5 2.8-3.7 5.6-14.3 18-17.6 21.8-3.2 3.7-6.5 4.2-12 1.4-32.6-16.3-54-29.1-75.5-66-5.7-9.8 5.7-9.1 16.3-30.3 1.8-3.7.9-6.9-.5-9.7-1.4-2.8-12.5-30.1-17.1-41.2-4.5-10.8-9.1-9.3-12.5-9.5-3.2-.2-6.9-.2-10.6-.2-3.7 0-9.7 1.4-14.8 6.9-5.1 5.6-19.4 19-19.4 46.3 0 27.3 19.9 53.7 22.6 57.4 2.8 3.7 39.1 59.7 94.8 83.8 35.2 15.2 49 16.5 66.6 13.9 10.7-1.6 32.8-13.4 37.4-26.4 4.6-13 4.6-24.1 3.2-26.4-1.3-2.5-5-3.9-10.5-6.6z"/>
   </svg>
 </a>
 
-<!-- SCRIPTS -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollToPlugin.min.js"></script>
+<!-- SCRIPTS (DEFERRED FOR TBT PERFORMANCE) -->
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollToPlugin.min.js"></script>
 
 <script>
 /* ════════════════════════════════════════════════════════════
-   SAGAR MALIK — Apple × Spline Enhanced Engine
+   SAGAR MALIK — PERFORMANCE & ACCESSIBILITY OPTIMIZED ENGINE
    ════════════════════════════════════════════════════════════ */
 
-const isMobile = window.innerWidth <= 768;
-const isTouch = window.matchMedia("(pointer: coarse)").matches;
-gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
+// Wait for the window to fully load and external libraries to arrive before booting 
+window.addEventListener('load', () => {
 
-/* ── PRELOADER SEQUENCE ────────────────────────────────────── */
-const tlLoader = gsap.timeline({
-  onComplete: () => {
-    document.getElementById('preloader').remove();
-    document.body.classList.remove('loading-lock');
-    initHeroIntro();
-  }
-});
-tlLoader.to('.preloader-logo', { opacity: 1, duration: 0.6, ease: 'power2.out' })
-        .to('.preloader-logo', { scale: 15, filter: 'blur(20px)', opacity: 0, duration: 1.2, ease: 'expo.inOut', delay: 0.5 })
-        .to('#preloader', { opacity: 0, duration: 0.6 }, '-=0.6');
+  const isMobile = window.innerWidth <= 768;
+  const isTouch = window.matchMedia("(pointer: coarse)").matches;
+  gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
 
-/* ── MARQUEE BUILD ─────────────────────────────────────────── */
-(function buildMarquee() {
+  /* ── LCP-OPTIMIZED FAST PRELOADER ──────────────────────────── */
+  const tlLoader = gsap.timeline({
+    onComplete: () => {
+      document.getElementById('preloader').remove();
+      document.body.classList.remove('loading-lock');
+      initHeroIntro();
+      
+      // DEFER 3D ENGINE: Do not block the main thread until the text is painted
+      setTimeout(init3DEngine, 50);
+    }
+  });
+  // Fast 0.3s execution eliminates Lighthouse LCP penalties
+  tlLoader.to('.preloader-logo', { opacity: 1, duration: 0.3, ease: 'power2.out' })
+          .to('.preloader-logo', { scale: 15, filter: 'blur(10px)', opacity: 0, duration: 0.5, ease: 'expo.inOut', delay: 0.2 })
+          .to('#preloader', { opacity: 0, duration: 0.3 }, '-=0.3');
+
+  /* ── MARQUEE BUILD ─────────────────────────────────────────── */
   const track = document.getElementById('marqueeTrack');
   const items = ['Interior Design','Mr. Interior Designer','User-Friendly Designs','Delhi / NCR','Sustainable Spaces','Luxurious Habitats','Sagar Malik'];
   const html = items.map(t => `<span class="marquee-item"><span class="dot"></span>${t}</span>`).join('');
   track.innerHTML = html + html; 
-})();
 
-/* ── MOBILE MENU ───────────────────────────────────────────── */
-document.getElementById('openMenu').addEventListener('click', () => document.getElementById('mobileDrawer').classList.add('active'));
-document.getElementById('closeMenu').addEventListener('click', () => document.getElementById('mobileDrawer').classList.remove('active'));
+  /* ── MOBILE MENU ───────────────────────────────────────────── */
+  document.getElementById('openMenu').addEventListener('click', () => document.getElementById('mobileDrawer').classList.add('active'));
+  document.getElementById('closeMenu').addEventListener('click', () => document.getElementById('mobileDrawer').classList.remove('active'));
 
-/* ── PARTICLES ─────────────────────────────────────────────── */
-if (!isMobile) {
-  const layer = document.getElementById('particlesLayer');
-  for (let i = 0; i < 28; i++) {
-    const p = document.createElement('div');
-    p.classList.add('particle');
-    const size = Math.random() * 2.5 + 0.8;
-    p.style.cssText = `
-      width:${size}px; height:${size}px;
-      left:${Math.random()*100}%;
-      animation-duration:${Math.random()*20+15}s;
-      animation-delay:${Math.random()*-25}s;
-      opacity:0.18;
-    `;
-    layer.appendChild(p);
-  }
-}
-
-/* ── CURSOR ────────────────────────────────────────────────── */
-const cDot = document.getElementById('cDot');
-const cRing = document.getElementById('cRing');
-let mouseX = window.innerWidth/2, mouseY = window.innerHeight/2;
-let ringX = mouseX, ringY = mouseY;
-
-if (!isTouch) {
-  window.addEventListener('mousemove', e => {
-    mouseX = e.clientX; mouseY = e.clientY;
-    cDot.style.left = mouseX + 'px'; cDot.style.top = mouseY + 'px';
-  });
-  (function tickCursor() {
-    ringX += (mouseX - ringX) * 0.12;
-    ringY += (mouseY - ringY) * 0.12;
-    cRing.style.left = ringX + 'px'; cRing.style.top = ringY + 'px';
-    requestAnimationFrame(tickCursor);
-  })();
-  document.querySelectorAll('.mag-target').forEach(el => {
-    el.addEventListener('mouseenter', () => document.body.classList.add('cursor-expand'));
-    el.addEventListener('mouseleave', () => document.body.classList.remove('cursor-expand'));
-  });
-}
-
-/* ════════════════════════════════════════════════════════════
-   THREE.JS — OPTIMIZED MATHEMATICAL ENGINE
-   ════════════════════════════════════════════════════════════ */
-const canvas = document.getElementById('webgl-canvas');
-// Hard-enabled antialias to cure mobile pixelation.
-const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, powerPreference: 'high-performance' });
-// Universal pixel ratio fixes blurring on mobile.
-renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
-renderer.setSize(window.innerWidth, window.innerHeight);
-renderer.toneMapping = THREE.ACESFilmicToneMapping;
-renderer.toneMappingExposure = 1.35;
-
-const scene = new THREE.Scene();
-scene.fog = new THREE.FogExp2(0x040404, 0.012);
-
-const camera = new THREE.PerspectiveCamera(45, window.innerWidth/window.innerHeight, 0.1, 200);
-camera.position.z = 22;
-
-/* ── LIGHTING ──────────────────────────────────────────────── */
-const ambient = new THREE.AmbientLight(0x334466, 1.2);
-scene.add(ambient);
-
-const keyLight = new THREE.DirectionalLight(0xffffff, 5);
-keyLight.position.set(12, 14, 8);
-scene.add(keyLight);
-
-const fillLight = new THREE.DirectionalLight(0x8899cc, 2.5);
-fillLight.position.set(-10, -6, -5);
-scene.add(fillLight);
-
-const rimLight = new THREE.DirectionalLight(0xE33925, 3);
-rimLight.position.set(0, -10, -10);
-scene.add(rimLight);
-
-const accentLight = new THREE.PointLight(0xE33925, 6, 25, 2);
-accentLight.position.set(-8, -5, 5);
-scene.add(accentLight);
-
-/* ── INFINITY CURVE ─────────────────────────────────────────── */
-class InfinityCurve extends THREE.Curve {
-  constructor(scale = 1) { super(); this.scale = scale; }
-  getPoint(t, opt = new THREE.Vector3()) {
-    const ang = 2 * Math.PI * t;
-    const denom = 1 + Math.sin(ang) * Math.sin(ang);
-    const x = (8 * Math.cos(ang)) / denom;
-    const y = (8 * Math.sin(ang) * Math.cos(ang)) / denom;
-    const z = Math.sin(ang * 2) * 1.5;
-    return opt.set(x, y, z).multiplyScalar(this.scale);
-  }
-}
-
-const path = new InfinityCurve(1.2);
-const tubeSegs  = isMobile ? 80 : 280;
-const radSegs   = isMobile ? 14  : 40;
-const tubeGeo   = new THREE.TubeGeometry(path, tubeSegs, 0.34, radSegs, true);
-
-// Main mesh kept physical for premium look.
-const mainMat = new THREE.MeshPhysicalMaterial({
-  color: 0x0a0a0a, metalness: 1.0, roughness: 0.08,
-  clearcoat: isMobile ? 0 : 1.0, clearcoatRoughness: 0.06,
-  reflectivity: 1.0, side: THREE.DoubleSide
-});
-const mainMesh = new THREE.Mesh(tubeGeo, mainMat);
-scene.add(mainMesh);
-
-// Aura switched to MeshStandardMaterial to stop GPU lag on low-end devices.
-const echoCount = isMobile ? 3 : 8;
-const echoes = [];
-for (let i = 1; i <= echoCount; i++) {
-  const mat = new THREE.MeshStandardMaterial({
-    color: 0x0a0a0a, metalness: 0.7, roughness: 0.25,
-    transparent: true, opacity: Math.max(0.01, 0.28 - i * 0.03),
-    blending: THREE.AdditiveBlending, depthWrite: false
-  });
-  const m = new THREE.Mesh(tubeGeo, mat);
-  scene.add(m);
-  echoes.push({ mesh: m, mat, offset: i });
-}
-
-/* ── HERO ENTRY ANIMATIONS ─────────────────────────────────── */
-function initHeroIntro() {
+  /* ── PARTICLES ─────────────────────────────────────────────── */
   if (!isMobile) {
-    const gridTl = gsap.timeline();
-    gridTl.to('.grid-line-h', { scaleX: 1, duration: 1.6, ease: 'power3.inOut', stagger: 0.2 })
-          .to('.grid-line-v', { scaleY: 1, duration: 1.6, ease: 'power3.inOut', stagger: 0.2 }, '-=1.3')
-          .to('.node-sq, .node-circ', { opacity: 1, duration: 0.5, stagger: 0.06 }, '-=0.5');
+    const layer = document.getElementById('particlesLayer');
+    for (let i = 0; i < 28; i++) {
+      const p = document.createElement('div');
+      p.classList.add('particle');
+      const size = Math.random() * 2.5 + 0.8;
+      p.style.cssText = `
+        width:${size}px; height:${size}px;
+        left:${Math.random()*100}%;
+        animation-duration:${Math.random()*20+15}s;
+        animation-delay:${Math.random()*-25}s;
+        opacity:0.18;
+      `;
+      layer.appendChild(p);
+    }
   }
-  gsap.to('.reveal-text-inner', { y: '0%', duration: 1.6, ease: 'power4.out', stagger: 0.12 });
-  gsap.to('.hero-accent-bar', { scaleX: 1, duration: 1.2, ease: 'power3.out', delay: 0.6, transformOrigin: 'left' });
-  gsap.to('.hero-subtitle', { opacity: 1, y: 0, duration: 1, ease: 'power3.out', delay: 0.9 });
-  gsap.to('.hero-coords', { opacity: 1, x: 0, duration: 1, ease: 'power3.out', delay: 1.1 });
-  gsap.to('.hero-scroll-cue', { opacity: 1, duration: 1, ease: 'power2.out', delay: 1.5 });
-}
 
-/* ── VELOCITY & SCROLL PROXY ───────────────────────────────── */
-let lastScrollY = 0; let scrollVelocity = 0;
-const velBlur = document.getElementById('velocity-blur');
+  /* ── CURSOR ────────────────────────────────────────────────── */
+  const cDot = document.getElementById('cDot');
+  const cRing = document.getElementById('cRing');
+  let mouseX = window.innerWidth/2, mouseY = window.innerHeight/2;
+  let ringX = mouseX, ringY = mouseY;
 
-document.querySelectorAll('.warp-link').forEach(link => {
-  link.addEventListener('click', e => {
-    e.preventDefault();
-    const targetId = link.getAttribute('href');
-    document.getElementById('mobileDrawer').classList.remove('active');
-    document.body.classList.add('warping');
-    gsap.to(camera, { fov: 160, duration: 0.9, ease: 'power2.in', onUpdate: () => camera.updateProjectionMatrix() });
-    gsap.to(window, {
-      scrollTo: targetId, duration: 1.6, ease: 'power4.inOut',
-      onComplete: () => {
-        gsap.to(camera, { fov: 45, duration: 0.9, ease: 'power2.out', onUpdate: () => camera.updateProjectionMatrix() });
-        document.body.classList.remove('warping');
-      }
+  if (!isTouch) {
+    window.addEventListener('mousemove', e => {
+      mouseX = e.clientX; mouseY = e.clientY;
+      cDot.style.left = mouseX + 'px'; cDot.style.top = mouseY + 'px';
+    });
+    (function tickCursor() {
+      ringX += (mouseX - ringX) * 0.12;
+      ringY += (mouseY - ringY) * 0.12;
+      cRing.style.left = ringX + 'px'; cRing.style.top = ringY + 'px';
+      requestAnimationFrame(tickCursor);
+    })();
+    document.querySelectorAll('.mag-target').forEach(el => {
+      el.addEventListener('mouseenter', () => document.body.classList.add('cursor-expand'));
+      el.addEventListener('mouseleave', () => document.body.classList.remove('cursor-expand'));
+    });
+  }
+
+  /* ── HERO ENTRY ANIMATIONS ─────────────────────────────────── */
+  function initHeroIntro() {
+    if (!isMobile) {
+      const gridTl = gsap.timeline();
+      gridTl.to('.grid-line-h', { scaleX: 1, duration: 1.6, ease: 'power3.inOut', stagger: 0.2 })
+            .to('.grid-line-v', { scaleY: 1, duration: 1.6, ease: 'power3.inOut', stagger: 0.2 }, '-=1.3')
+            .to('.node-sq, .node-circ', { opacity: 1, duration: 0.5, stagger: 0.06 }, '-=0.5');
+    }
+    gsap.to('.reveal-text-inner', { y: '0%', duration: 1.6, ease: 'power4.out', stagger: 0.12 });
+    gsap.to('.hero-accent-bar', { scaleX: 1, duration: 1.2, ease: 'power3.out', delay: 0.6, transformOrigin: 'left' });
+    gsap.to('.hero-subtitle', { opacity: 1, y: 0, duration: 1, ease: 'power3.out', delay: 0.9 });
+    gsap.to('.hero-coords', { opacity: 1, x: 0, duration: 1, ease: 'power3.out', delay: 1.1 });
+    gsap.to('.hero-scroll-cue', { opacity: 1, duration: 1, ease: 'power2.out', delay: 1.5 });
+  }
+
+  /* ── DOM & SCROLL INTERACTIONS ─────────────────────────────── */
+  let lastScrollY = 0; let scrollVelocity = 0;
+  const velBlur = document.getElementById('velocity-blur');
+
+  document.querySelectorAll('.warp-link').forEach(link => {
+    link.addEventListener('click', e => {
+      e.preventDefault();
+      const targetId = link.getAttribute('href');
+      document.getElementById('mobileDrawer').classList.remove('active');
+      document.body.classList.add('warping');
+      gsap.to(window, {
+        scrollTo: targetId, duration: 1.6, ease: 'power4.inOut',
+        onComplete: () => {
+          document.body.classList.remove('warping');
+        }
+      });
     });
   });
-});
 
-document.querySelectorAll('.reveal').forEach(el => {
-  gsap.fromTo(el, { y: 48, opacity: 0 }, { y: 0, opacity: 1, duration: 1.3, ease: 'power3.out', scrollTrigger: { trigger: el, start: 'top 86%', once: true } });
-});
-
-if (!isMobile) {
-  document.querySelectorAll('.parallax').forEach(el => {
-    gsap.to(el, { y: () => window.innerHeight * parseFloat(el.getAttribute('data-speed')), ease: 'none', scrollTrigger: { trigger: '#services', start: 'top bottom', end: 'bottom top', scrub: 1.5 } });
+  document.querySelectorAll('.reveal').forEach(el => {
+    gsap.fromTo(el, { y: 48, opacity: 0 }, { y: 0, opacity: 1, duration: 1.3, ease: 'power3.out', scrollTrigger: { trigger: el, start: 'top 86%', once: true } });
   });
-}
 
-gsap.to('.cad-diagram', { rotation: 200, ease: 'none', scrollTrigger: { trigger: 'body', start: 'top top', end: 'bottom bottom', scrub: 2 } });
+  if (!isMobile) {
+    document.querySelectorAll('.parallax').forEach(el => {
+      gsap.to(el, { y: () => window.innerHeight * parseFloat(el.getAttribute('data-speed')), ease: 'none', scrollTrigger: { trigger: '#services', start: 'top bottom', end: 'bottom top', scrub: 1.5 } });
+    });
+  }
 
-let targetRotX = 0, targetRotY = 0;
-if (!isTouch) {
-  window.addEventListener('mousemove', e => {
-    targetRotX = ((e.clientY / window.innerHeight) * 2 - 1) * 0.45;
-    targetRotY = ((e.clientX / window.innerWidth)  * 2 - 1) * 0.45;
-    gsap.to('#cadDiagram', { x: targetRotY * -35, y: targetRotX * -35, duration: 1.1, ease: 'power2.out' });
-  });
-}
+  gsap.to('.cad-diagram', { rotation: 200, ease: 'none', scrollTrigger: { trigger: 'body', start: 'top top', end: 'bottom bottom', scrub: 2 } });
 
-const modelState = { x: 0, y: 0, z: 0, scale: 1, rotZ: 0, colorR: 10/255, colorG: 10/255, colorB: 10/255, roughness: 0.08 };
-gsap.timeline({ scrollTrigger: { trigger: 'body', start: 'top top', end: 'bottom bottom', scrub: 2.5 } })
-  .to(modelState, { x: 6, z: 5, scale: 1.25, rotZ: 0.5, roughness: 0.04, ease: 'power1.inOut' }, 0)
-  .to(modelState, { x: -5, z: -3, scale: 0.75, colorR: 220/255, colorG: 220/255, colorB: 220/255, roughness: 0.18, ease: 'power2.inOut' }, 0.3)
-  .to(modelState, { x: 0, z: 0, scale: 1, colorR: 10/255, colorG: 10/255, colorB: 10/255, roughness: 0.08, ease: 'power2.inOut' }, 0.62)
-  .to(modelState, { x: 4, z: 3, scale: 1.15, colorR: 220/255, colorG: 220/255, colorB: 220/255, ease: 'power2.inOut' }, 0.86);
+  let targetRotX = 0, targetRotY = 0;
+  if (!isTouch) {
+    window.addEventListener('mousemove', e => {
+      targetRotX = ((e.clientY / window.innerHeight) * 2 - 1) * 0.45;
+      targetRotY = ((e.clientX / window.innerWidth)  * 2 - 1) * 0.45;
+      gsap.to('#cadDiagram', { x: targetRotY * -35, y: targetRotX * -35, duration: 1.1, ease: 'power2.out' });
+    });
+  }
 
-let rafScroll;
-window.addEventListener('scroll', () => {
-  cancelAnimationFrame(rafScroll);
-  rafScroll = requestAnimationFrame(() => {
-    const sy = window.scrollY; scrollVelocity = Math.abs(sy - lastScrollY); lastScrollY = sy;
-    velBlur.style.opacity = Math.min(scrollVelocity / 80, 0.6);
-    clearTimeout(velBlur._timeout);
-    velBlur._timeout = setTimeout(() => { velBlur.style.opacity = 0; }, 120);
+  /* ════════════════════════════════════════════════════════════
+     THREE.JS — DEFERRED EXECUTION (Fixes Total Blocking Time)
+     ════════════════════════════════════════════════════════════ */
+  function init3DEngine() {
+    const canvas = document.getElementById('webgl-canvas');
+    const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, powerPreference: 'high-performance' });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 1.35;
 
-    const progress = sy / (document.documentElement.scrollHeight - window.innerHeight);
-    document.body.classList.toggle('dark', (progress > 0.25 && progress < 0.55) || progress > 0.85);
-    if (scene.fog) scene.fog.density = 0.012 + scrollVelocity * 0.0002;
-  });
-}, { passive: true });
+    const scene = new THREE.Scene();
+    scene.fog = new THREE.FogExp2(0x040404, 0.012);
 
-/* ── PURE MATH RENDER LOOP (Zero Jitter) ─────────────────────── */
-const clock = new THREE.Clock();
+    const camera = new THREE.PerspectiveCamera(45, window.innerWidth/window.innerHeight, 0.1, 200);
+    camera.position.z = 22;
 
-function render() {
-  const t = clock.getElapsedTime();
-  
-  // Base State Updates
-  mainMesh.position.set(modelState.x, modelState.y, modelState.z);
-  mainMesh.scale.setScalar(modelState.scale);
-  mainMat.color.setRGB(modelState.colorR, modelState.colorG, modelState.colorB);
-  mainMat.roughness = modelState.roughness; 
-  
-  mainMesh.rotation.x += (targetRotX - mainMesh.rotation.x) * 0.04;
-  mainMesh.rotation.y += (targetRotY - mainMesh.rotation.y) * 0.04;
-  mainMesh.rotation.z  = t * 0.13 + modelState.rotZ;
+    const ambient = new THREE.AmbientLight(0x334466, 1.2);
+    scene.add(ambient);
+    const keyLight = new THREE.DirectionalLight(0xffffff, 5);
+    keyLight.position.set(12, 14, 8);
+    scene.add(keyLight);
+    const fillLight = new THREE.DirectionalLight(0x8899cc, 2.5);
+    fillLight.position.set(-10, -6, -5);
+    scene.add(fillLight);
+    const rimLight = new THREE.DirectionalLight(0xE33925, 3);
+    rimLight.position.set(0, -10, -10);
+    scene.add(rimLight);
+    const accentLight = new THREE.PointLight(0xE33925, 6, 25, 2);
+    accentLight.position.set(-8, -5, 5);
+    scene.add(accentLight);
 
-  accentLight.position.set(Math.sin(t * 0.5) * 12, Math.cos(t * 0.4) * 8, 5);
-  accentLight.intensity = 4 + Math.sin(t * 1.5) * 2;
+    class InfinityCurve extends THREE.Curve {
+      constructor(scale = 1) { super(); this.scale = scale; }
+      getPoint(t, opt = new THREE.Vector3()) {
+        const ang = 2 * Math.PI * t;
+        const denom = 1 + Math.sin(ang) * Math.sin(ang);
+        const x = (8 * Math.cos(ang)) / denom;
+        const y = (8 * Math.sin(ang) * Math.cos(ang)) / denom;
+        const z = Math.sin(ang * 2) * 1.5;
+        return opt.set(x, y, z).multiplyScalar(this.scale);
+      }
+    }
 
-  // Mathematically calculated Aura (Guaranteed 0 lag, totally smooth)
-  echoes.forEach((echo) => {
-    const tOffset = echo.offset * 0.12; 
-    const echoT = t - tOffset;
+    const path = new InfinityCurve(1.2);
+    const tubeSegs  = isMobile ? 80 : 280;
+    const radSegs   = isMobile ? 14  : 40;
+    const tubeGeo   = new THREE.TubeGeometry(path, tubeSegs, 0.34, radSegs, true);
 
-    const smearAmp = echo.offset * 0.22;
-    const smX = Math.sin(echoT * 1.8 + echo.offset * 1.1) * smearAmp;
-    const smY = Math.cos(echoT * 1.6 + echo.offset * 0.9) * smearAmp;
+    const mainMat = new THREE.MeshPhysicalMaterial({
+      color: 0x0a0a0a, metalness: 1.0, roughness: 0.08,
+      clearcoat: isMobile ? 0 : 1.0, clearcoatRoughness: 0.06,
+      reflectivity: 1.0, side: THREE.DoubleSide
+    });
+    const mainMesh = new THREE.Mesh(tubeGeo, mainMat);
+    scene.add(mainMesh);
 
-    const targetX = modelState.x + smX;
-    const targetY = modelState.y + smY;
-    const targetZ = modelState.z - (echo.offset * 0.45 * modelState.scale);
+    const echoCount = isMobile ? 3 : 8;
+    const echoes = [];
+    for (let i = 1; i <= echoCount; i++) {
+      const mat = new THREE.MeshStandardMaterial({
+        color: 0x0a0a0a, metalness: 0.7, roughness: 0.25,
+        transparent: true, opacity: Math.max(0.01, 0.28 - i * 0.03),
+        blending: THREE.AdditiveBlending, depthWrite: false
+      });
+      const m = new THREE.Mesh(tubeGeo, mat);
+      scene.add(m);
+      echoes.push({ mesh: m, mat, offset: i });
+    }
+
+    const modelState = { x: 0, y: 0, z: 0, scale: 1, rotZ: 0, colorR: 10/255, colorG: 10/255, colorB: 10/255, roughness: 0.08 };
+    gsap.timeline({ scrollTrigger: { trigger: 'body', start: 'top top', end: 'bottom bottom', scrub: 2.5 } })
+      .to(modelState, { x: 6, z: 5, scale: 1.25, rotZ: 0.5, roughness: 0.04, ease: 'power1.inOut' }, 0)
+      .to(modelState, { x: -5, z: -3, scale: 0.75, colorR: 220/255, colorG: 220/255, colorB: 220/255, roughness: 0.18, ease: 'power2.inOut' }, 0.3)
+      .to(modelState, { x: 0, z: 0, scale: 1, colorR: 10/255, colorG: 10/255, colorB: 10/255, roughness: 0.08, ease: 'power2.inOut' }, 0.62)
+      .to(modelState, { x: 4, z: 3, scale: 1.15, colorR: 220/255, colorG: 220/255, colorB: 220/255, ease: 'power2.inOut' }, 0.86);
+
+    window.addEventListener('scroll', () => {
+      cancelAnimationFrame(rafScroll);
+      rafScroll = requestAnimationFrame(() => {
+        const sy = window.scrollY; scrollVelocity = Math.abs(sy - lastScrollY); lastScrollY = sy;
+        velBlur.style.opacity = Math.min(scrollVelocity / 80, 0.6);
+        clearTimeout(velBlur._timeout);
+        velBlur._timeout = setTimeout(() => { velBlur.style.opacity = 0; }, 120);
+
+        const progress = sy / (document.documentElement.scrollHeight - window.innerHeight);
+        document.body.classList.toggle('dark', (progress > 0.25 && progress < 0.55) || progress > 0.85);
+        if (scene.fog) scene.fog.density = 0.012 + scrollVelocity * 0.0002;
+      });
+    }, { passive: true });
+
+    const clock = new THREE.Clock();
+    function render() {
+      const t = clock.getElapsedTime();
+      
+      mainMesh.position.set(modelState.x, modelState.y, modelState.z);
+      mainMesh.scale.setScalar(modelState.scale);
+      mainMat.color.setRGB(modelState.colorR, modelState.colorG, modelState.colorB);
+      mainMat.roughness = modelState.roughness; 
+      
+      mainMesh.rotation.x += (targetRotX - mainMesh.rotation.x) * 0.04;
+      mainMesh.rotation.y += (targetRotY - mainMesh.rotation.y) * 0.04;
+      mainMesh.rotation.z  = t * 0.13 + modelState.rotZ;
+
+      accentLight.position.set(Math.sin(t * 0.5) * 12, Math.cos(t * 0.4) * 8, 5);
+      accentLight.intensity = 4 + Math.sin(t * 1.5) * 2;
+
+      echoes.forEach((echo) => {
+        const tOffset = echo.offset * 0.12; 
+        const echoT = t - tOffset;
+
+        const smearAmp = echo.offset * 0.22;
+        const smX = Math.sin(echoT * 1.8 + echo.offset * 1.1) * smearAmp;
+        const smY = Math.cos(echoT * 1.6 + echo.offset * 0.9) * smearAmp;
+
+        const targetX = modelState.x + smX;
+        const targetY = modelState.y + smY;
+        const targetZ = modelState.z - (echo.offset * 0.45 * modelState.scale);
+        
+        echo.mesh.position.x += (targetX - echo.mesh.position.x) * 0.1;
+        echo.mesh.position.y += (targetY - echo.mesh.position.y) * 0.1;
+        echo.mesh.position.z += (targetZ - echo.mesh.position.z) * 0.1;
+
+        const targetRz = echoT * 0.13 + modelState.rotZ;
+        echo.mesh.rotation.x += (mainMesh.rotation.x - echo.mesh.rotation.x) * 0.1;
+        echo.mesh.rotation.y += (mainMesh.rotation.y - echo.mesh.rotation.y) * 0.1;
+        echo.mesh.rotation.z += (targetRz - echo.mesh.rotation.z) * 0.1;
+
+        echo.mesh.scale.setScalar(modelState.scale * (1 + echo.offset * 0.025));
+        echo.mat.color.setRGB(modelState.colorR, modelState.colorG, modelState.colorB);
+        
+        const velBoost = Math.min(scrollVelocity / 40, 1);
+        echo.mat.opacity = Math.min(0.32, (0.28 - echo.offset * 0.03) + velBoost * 0.15);
+      });
+
+      renderer.render(scene, camera);
+      requestAnimationFrame(render);
+    }
     
-    echo.mesh.position.x += (targetX - echo.mesh.position.x) * 0.1;
-    echo.mesh.position.y += (targetY - echo.mesh.position.y) * 0.1;
-    echo.mesh.position.z += (targetZ - echo.mesh.position.z) * 0.1;
+    // Fade in canvas smoothly once loaded
+    document.getElementById('canvas-container').classList.add('loaded');
+    render();
 
-    const targetRz = echoT * 0.13 + modelState.rotZ;
-    echo.mesh.rotation.x += (mainMesh.rotation.x - echo.mesh.rotation.x) * 0.1;
-    echo.mesh.rotation.y += (mainMesh.rotation.y - echo.mesh.rotation.y) * 0.1;
-    echo.mesh.rotation.z += (targetRz - echo.mesh.rotation.z) * 0.1;
+    window.addEventListener('resize', () => {
+      camera.aspect = window.innerWidth / window.innerHeight; camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight); ScrollTrigger.refresh();
+    });
+  }
 
-    echo.mesh.scale.setScalar(modelState.scale * (1 + echo.offset * 0.025));
-    echo.mat.color.setRGB(modelState.colorR, modelState.colorG, modelState.colorB);
-    
-    const velBoost = Math.min(scrollVelocity / 40, 1);
-    echo.mat.opacity = Math.min(0.32, (0.28 - echo.offset * 0.03) + velBoost * 0.15);
-  });
-
-  renderer.render(scene, camera);
-  requestAnimationFrame(render);
-}
-render();
-
-window.addEventListener('resize', () => {
-  camera.aspect = window.innerWidth / window.innerHeight; camera.updateProjectionMatrix();
-  renderer.setSize(window.innerWidth, window.innerHeight); ScrollTrigger.refresh();
-});
+}); // End window load wrapper
 </script>
 </body>
 </html>
