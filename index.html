@@ -2,10 +2,22 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<!-- STRICT VIEWPORT: Prevents mobile zoom/wiggle and uses dvh for dynamic mobile toolbars -->
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>SAGAR MALIK | Cinematic Spatial Design</title>
-<meta name="description" content="Mr. Interior Designer - Uncompromising spatial construction and luxury interior design serving Delhi/NCR.">
 
+<!-- SEO & METADATA -->
+<title>SAGAR MALIK | Cinematic Spatial Design & Architecture</title>
+<meta name="description" content="Mr. Interior Designer - Uncompromising spatial construction and luxury interior design serving Delhi/NCR. We create healthy, luxurious, and sustainable habitats.">
+<meta name="keywords" content="Interior Designer, Spatial Design, Luxury Interiors, Delhi NCR Interior Designer, Sagar Malik, Brutalist Architecture">
+<meta name="author" content="Sagar Malik">
+<meta name="robots" content="index, follow">
+
+<!-- OPEN GRAPH (SOCIAL SHARING) -->
+<meta property="og:title" content="SAGAR MALIK | Cinematic Spatial Design">
+<meta property="og:description" content="Uncompromising spatial construction and luxury interior design serving Delhi/NCR.">
+<meta property="og:type" content="website">
+
+<!-- FONTS -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Anton&family=Manrope:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
@@ -18,11 +30,11 @@
   --text: #f5f5f5;
   --text-muted: #888888;
   --line: rgba(255, 255, 255, 0.1);
-  --accent: #E33925;
+  --accent: #E33925; /* Strict Red Accent */
   --accent-glow: rgba(227, 57, 37, 0.4);
   
   /* Liquid Glass Variables (Dark) */
-  --glass-tint: rgba(15, 15, 15, 0.65);
+  --glass-tint: rgba(10, 10, 10, 0.5);
   --glass-shine: rgba(255, 255, 255, 0.08);
   --glass-shadow: rgba(0, 0, 0, 0.6);
 
@@ -40,28 +52,32 @@ body.theme-light {
   --line: rgba(0, 0, 0, 0.08);
   
   /* Liquid Glass Variables (Light) */
-  --glass-tint: rgba(255, 255, 255, 0.6);
+  --glass-tint: rgba(255, 255, 255, 0.45);
   --glass-shine: rgba(255, 255, 255, 0.8);
   --glass-shadow: rgba(0, 0, 0, 0.08);
 }
 
-/* ── BASE RESET & FLUID TRANSITIONS ────────────────────────── */
+/* ── BASE RESET & LENIS CSS ────────────────────────────────── */
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-html { width: 100%; max-width: 100%; overflow-x: hidden; background: var(--bg); }
+html { width: 100%; max-width: 100%; background: var(--bg); }
+html.lenis, html.lenis body { height: auto; }
+.lenis.lenis-smooth { scroll-behavior: auto !important; }
+.lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
+.lenis.lenis-stopped { overflow: hidden; }
+
 body {
   width: 100%; max-width: 100%; overflow-x: hidden;
   background-color: var(--bg); color: var(--text);
   font-family: var(--font-body); -webkit-font-smoothing: antialiased;
-  cursor: none; overscroll-behavior: none;
+  cursor: none; overscroll-behavior-y: none;
   transition: background-color 1.2s cubic-bezier(0.77, 0, 0.175, 1), 
               color 1.2s cubic-bezier(0.77, 0, 0.175, 1);
 }
 
-/* Remove default blue selection */
+/* ── STRICT ACCENT ENFORCEMENT (NO BLUE) ───────────────────── */
 ::selection { background: var(--accent); color: #fff; }
 ::-moz-selection { background: var(--accent); color: #fff; }
-/* Remove mobile tap highlight blue */
-* { -webkit-tap-highlight-color: transparent; }
+* { -webkit-tap-highlight-color: transparent; outline-color: var(--accent); }
 
 /* ── NOISE / FILM GRAIN ────────────────────────────────────── */
 .noise {
@@ -100,20 +116,20 @@ body.cursor-expand .cursor-ring { width: 90px; height: 90px; background: #fff; o
 nav { position: fixed; top: 0; left: 0; right: 0; height: 90px; padding: 0 5%; display: flex; align-items: center; justify-content: space-between; z-index: 500; transition: color 1.2s ease; }
 .nav-bg {
   position: absolute; inset: 0; z-index: -1;
-  background: rgba(15, 15, 15, 0.15); /* Highly translucent */
+  background: rgba(10, 10, 10, 0.15); /* Ultra translucent */
   backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
   transition: background 1.2s ease, border-color 1.2s ease;
   overflow: hidden;
 }
-/* Liquid Glass filter applied to Navbar */
+/* SVG Distortion Layer for Navbar */
 .nav-bg::before {
   content: ''; position: absolute; inset: 0;
-  backdrop-filter: blur(5px); filter: url(#glass-distortion); opacity: 0.6; pointer-events: none;
+  backdrop-filter: blur(5px); filter: url(#glass-distortion); opacity: 0.4; pointer-events: none;
 }
 body.theme-light .nav-bg {
-  background: rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.15);
   border-bottom: 1px solid rgba(0, 0, 0, 0.05);
 }
 
@@ -125,7 +141,7 @@ body.theme-light .nav-bg {
 .menu-toggle { display: none; font-family: var(--font-tech); font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; color: var(--text); background: transparent; border: none; cursor: pointer; transition: color 1.2s ease; padding: 10px; }
 
 /* ── MOBILE DRAWER ─────────────────────────────────────────── */
-.mobile-drawer { position: fixed; top: 0; left: -100%; width: 100%; height: 100vh; background: var(--bg); z-index: 9000; padding: 2rem 5%; display: flex; flex-direction: column; justify-content: space-between; transition: transform 0.8s cubic-bezier(0.77, 0, 0.175, 1), background 1.2s ease; border-right: 1px solid var(--line); }
+.mobile-drawer { position: fixed; top: 0; left: -100%; width: 100%; height: 100dvh; background: var(--bg); z-index: 9000; padding: 2rem 5%; display: flex; flex-direction: column; justify-content: space-between; transition: transform 0.8s cubic-bezier(0.77, 0, 0.175, 1), background 1.2s ease; border-right: 1px solid var(--line); }
 .mobile-drawer.active { transform: translateX(100%); }
 .drawer-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--line); padding-bottom: 2rem; }
 .drawer-close { font-family: var(--font-tech); font-size: 0.75rem; color: var(--text); background: transparent; border: none; cursor: pointer; text-transform: uppercase; letter-spacing: 2px; padding: 10px; }
@@ -155,41 +171,43 @@ body.theme-light .nav-bg {
   transition: box-shadow 1.2s ease;
 }
 .liquidGlass-content {
-  position: relative; z-index: 3; padding: 3.5rem 2.5rem; display: flex; flex-direction: column; gap: 1.5rem;
+  position: relative; z-index: 3; padding: 3.5rem 2.5rem; display: flex; flex-direction: column; gap: 1.5rem; height: 100%;
 }
 .liquidGlass-wrapper:hover {
   transform: translateY(-10px) scale(1.02);
   box-shadow: 0 25px 50px var(--glass-shadow), 0 0 0 1px var(--accent-glow);
 }
 
-/* Mobile Optimization: Disable heavy SVG filter on small screens */
+/* Mobile Optimization: Disable heavy SVG filter on small screens for 60fps */
 @media (max-width: 768px) {
   .liquidGlass-effect, .nav-bg::before { filter: none; backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); }
   .liquidGlass-wrapper:hover { transform: none; box-shadow: 0 15px 35px var(--glass-shadow); }
 }
 
 /* ── TEXT & IMAGE REVEAL SYSTEM ────────────────────────────── */
-.line-mask { overflow: hidden; display: block; margin: -0.1em 0; }
+.line-mask { overflow: hidden; display: block; padding: 0.2em 0; margin: -0.2em 0; } /* Padding fixed font cutoff */
 .line-reveal { display: block; transform: translateY(115%); will-change: transform; }
-.img-parallax-wrap { overflow: hidden; position: relative; border-radius: 8px; border: 1px solid var(--line); transition: border-color 1.2s ease; }
-.img-parallax-wrap img { width: 100%; height: 130%; object-fit: cover; will-change: transform; transform: translateY(-15%); filter: grayscale(100%) contrast(1.1); transition: filter 0.8s ease, transform 0.8s ease; }
+.img-parallax-wrap { overflow: hidden; position: relative; border-radius: 8px; border: 1px solid var(--line); transition: border-color 1.2s ease; display: block; width: 100%; }
+.img-parallax-wrap img { width: 100%; height: 130%; object-fit: cover; will-change: transform; transform: translateY(-15%); filter: grayscale(100%) contrast(1.1); transition: filter 0.8s ease, transform 0.8s ease; display: block; }
 .img-parallax-wrap:hover img { filter: grayscale(0%) contrast(1); transform: translateY(-15%) scale(1.05); }
 
 /* ── HERO: CINEMATIC VIDEO SCROLL ──────────────────────────── */
-#hero { position: relative; width: 100%; height: 100vh; background: #000; overflow: hidden; padding: 0; }
-#video-canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: 1; opacity: 0.8; will-change: transform, opacity; }
+#hero { position: relative; width: 100%; height: 100dvh; background: #000; overflow: hidden; padding: 0; }
+#video-canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: 1; opacity: 0.8; will-change: transform, opacity; pointer-events: none; }
 .hero-overlay { position: absolute; inset: 0; background: radial-gradient(circle at center, transparent 0%, rgba(0,0,0,0.85) 100%); z-index: 2; pointer-events: none; }
 
-.hero-content { position: absolute; inset: 0; z-index: 10; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; }
+.hero-content { position: absolute; inset: 0; z-index: 10; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; pointer-events: none; }
 .hero-title { 
-  font-family: var(--font-display); font-size: clamp(5rem, 18vw, 16rem); 
-  line-height: 1.15; /* Fixed cutoff */
+  font-family: var(--font-display); font-size: clamp(3.2rem, 15vw, 16rem); 
+  line-height: 1.1; 
   text-transform: uppercase; color: #fff; mix-blend-mode: overlay; 
   text-shadow: 0 20px 50px rgba(0,0,0,0.8); 
-  display: flex; flex-direction: column; gap: 2rem; /* Increased spacing between SAGAR and MALIK */
+  display: flex; flex-direction: column; gap: 0.5rem; 
 }
+@media (min-width: 768px) { .hero-title { gap: 2rem; } } /* Spacing fixed */
+
 .hero-subtitle { font-family: var(--font-tech); font-size: clamp(0.7rem, 1.2vw, 1rem); letter-spacing: 8px; text-transform: uppercase; color: #ccc; margin-top: 1rem; }
-.hero-coords { position: absolute; bottom: 5%; left: 5%; font-family: var(--font-tech); font-size: 0.65rem; letter-spacing: 2px; color: #888; display: flex; flex-direction: column; gap: 0.5rem; border-left: 1px solid var(--accent); padding-left: 1rem; text-align: left; z-index: 10; }
+.hero-coords { position: absolute; bottom: 5%; left: 5%; font-family: var(--font-tech); font-size: 0.65rem; letter-spacing: 2px; color: #888; display: flex; flex-direction: column; gap: 0.5rem; border-left: 1px solid var(--accent); padding-left: 1rem; text-align: left; z-index: 10; pointer-events: none; }
 
 /* ── MARQUEE ───────────────────────────────────────────────── */
 .marquee-section { overflow: hidden; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); padding: 1.5rem 0; position: relative; z-index: 20; transition: border-color 1.2s ease; }
@@ -209,7 +227,7 @@ section { min-height: 100vh; position: relative; padding: 10rem 5%; z-index: 20;
 .about-manifesto { font-family: var(--font-luxury); font-size: clamp(2rem, 4vw, 4.5rem); line-height: 1.1; margin-bottom: 2rem; color: var(--text); font-style: italic; transition: color 1.2s ease; }
 .about-manifesto em { font-family: var(--font-display); font-style: normal; color: transparent; -webkit-text-stroke: 1px var(--text); text-transform: uppercase; transition: -webkit-text-stroke 1.2s ease; }
 .about-statement { font-family: var(--font-tech); font-size: 0.85rem; letter-spacing: 2px; text-transform: uppercase; color: var(--accent); margin-bottom: 3rem; }
-.depth-badge { position: absolute; top: 1.5rem; right: 1.5rem; font-family: var(--font-tech); font-size: 0.6rem; letter-spacing: 2px; text-transform: uppercase; color: var(--bg); background: var(--text); padding: 0.4rem 1rem; border-radius: 50px; transform: translateZ(20px); transition: all 1.2s ease; z-index: 10; }
+.depth-badge { position: absolute; top: 1.5rem; right: 1.5rem; font-family: var(--font-tech); font-size: 0.6rem; letter-spacing: 2px; text-transform: uppercase; color: var(--bg); background: var(--text); padding: 0.4rem 1rem; border-radius: 50px; transform: translateZ(20px); transition: all 1.2s ease; z-index: 10; } /* Fixed overlapping */
 .stat-row { display: grid; grid-template-columns: repeat(3,1fr); gap: 2rem; margin-top: 4rem; }
 .stat-item { border-top: 1px solid var(--line); padding-top: 1.5rem; transition: border-color 1.2s ease; }
 .stat-num { font-family: var(--font-display); font-size: 3rem; line-height: 1; color: var(--text); transition: color 1.2s ease; }
@@ -217,7 +235,6 @@ section { min-height: 100vh; position: relative; padding: 10rem 5%; z-index: 20;
 
 /* ── SERVICES (DARK THEME TRIGGER) ───────────────────────────────── */
 .services-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2.5rem; perspective: 1500px; margin-top: 4rem; }
-/* Desktop Staggering - Removed inline styles to prevent mobile overlap */
 @media (min-width: 1025px) {
   .services-grid .liquidGlass-wrapper:nth-child(2) { margin-top: 5rem; }
   .services-grid .liquidGlass-wrapper:nth-child(3) { margin-top: 2.5rem; }
@@ -228,10 +245,10 @@ section { min-height: 100vh; position: relative; padding: 10rem 5%; z-index: 20;
 
 /* ── ARCHIVE (LIGHT THEME TRIGGER) ───────────────────────────────── */
 .toc-grid { display: grid; grid-template-columns: repeat(3,1fr); border-top: 1px solid var(--line); border-left: 1px solid var(--line); margin-top: 4rem; transition: border-color 1.2s ease; }
-.toc-item { border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); padding: 4rem 2rem; position: relative; display: flex; flex-direction: column; align-items: center; text-align: center; transition: background 0.4s, border-color 1.2s ease; }
+.toc-item { border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); padding: 4rem 2rem; position: relative; display: flex; flex-direction: column; align-items: center; text-align: center; transition: background 0.4s, border-color 1.2s ease; text-decoration: none; }
 .toc-item:hover { background: var(--glass-tint); }
 .toc-num { font-family: var(--font-display); font-size: 5rem; line-height: 1; position: absolute; top: 1rem; left: 1rem; color: var(--text); opacity: 0.05; pointer-events: none; transition: color 1.2s ease; }
-.toc-img-wrap { width: 100%; aspect-ratio: 3/2; margin-bottom: 2rem; }
+.toc-img-wrap { width: 100%; aspect-ratio: 3/2; margin-bottom: 2rem; display: block; }
 .toc-title { font-family: var(--font-tech); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 3px; color: var(--text); transition: color 1.2s ease; }
 
 /* ── FOOTER (DARK THEME TRIGGER) ─────────────────────────────────── */
@@ -273,7 +290,6 @@ footer { padding: 8rem 5% 2rem; border-top: 1px solid var(--line); position: rel
   nav { height: 70px; }
   .nav-links { display: none; }
   .menu-toggle { display: block; }
-  /* Increased padding to prevent mobile overlaps */
   section { padding: 8rem 5%; }
   .grid-2 { gap: 3rem; }
   .services-grid, .toc-grid, .footer-top { grid-template-columns: 1fr; gap: 2rem; }
@@ -327,14 +343,14 @@ footer { padding: 8rem 5% 2rem; border-top: 1px solid var(--line); position: rel
     <a href="#toc" class="mag-target">Archive</a>
     <a href="https://wa.me/919654119643" target="_blank" class="mag-target" style="color:var(--accent);">Initiate</a>
   </div>
-  <button class="menu-toggle mag-target" id="openMenu">Menu</button>
+  <button class="menu-toggle mag-target" id="openMenu" aria-label="Open Menu">Menu</button>
 </nav>
 
 <!-- MOBILE DRAWER -->
 <div class="mobile-drawer" id="mobileDrawer">
   <div class="drawer-header">
     <span class="logo">SM<span>.</span></span>
-    <button class="drawer-close mag-target" id="closeMenu">Close</button>
+    <button class="drawer-close mag-target" id="closeMenu" aria-label="Close Menu">Close</button>
   </div>
   <div class="drawer-links">
     <a href="#about" class="mag-target drawer-link"><span>01</span>Philosophy</a>
@@ -343,198 +359,195 @@ footer { padding: 8rem 5% 2rem; border-top: 1px solid var(--line); position: rel
   </div>
 </div>
 
-<!-- SMOOTH SCROLL WRAPPER -->
-<div id="smooth-wrapper">
-  <div id="smooth-content">
+<!-- MAIN CONTENT WRAPPER -->
+<main>
 
-    <!-- ══ HERO: CINEMATIC VIDEO SCROLL ══ -->
-    <section id="hero">
-      <canvas id="video-canvas"></canvas>
-      <div class="hero-overlay"></div>
-      
-      <div class="hero-coords parallax-fast">
-        <span>[ 28° 38' N, 77° 17' E ]</span>
-        <span>DELHI, NCR</span>
-        <span style="color:var(--accent);">SCALE 1:100</span>
-      </div>
-
-      <div class="hero-content" id="hero-text">
-        <h1 class="hero-title parallax-slow">
-          <span class="line-mask"><span class="line-reveal">SAGAR</span></span>
-          <span class="line-mask"><span class="line-reveal">MALIK</span></span>
-        </h1>
-        <div class="hero-subtitle line-mask parallax-fast"><span class="line-reveal">Mr. Interior Designer</span></div>
-      </div>
-    </section>
-
-    <!-- ══ MARQUEE ══ -->
-    <div class="marquee-section">
-      <div class="marquee-track" id="marqueeTrack"></div>
+  <!-- ══ HERO: CINEMATIC VIDEO SCROLL ══ -->
+  <section id="hero">
+    <canvas id="video-canvas"></canvas>
+    <div class="hero-overlay"></div>
+    
+    <div class="hero-coords parallax-fast">
+      <span>[ 28° 38' N, 77° 17' E ]</span>
+      <span>DELHI, NCR</span>
+      <span style="color:var(--accent);">SCALE 1:100</span>
     </div>
 
-    <!-- ══ ABOUT (LIGHT THEME TRIGGER) ══ -->
-    <section id="about" class="theme-trigger-light">
-      <div class="grid-2">
-        <div class="about-editorial side-enter-left">
-          <span class="tech-label parallax-fast"><span class="line-mask"><span class="line-reveal">FIG. 01 / THE ARCHITECT</span></span></span>
+    <div class="hero-content" id="hero-text">
+      <h1 class="hero-title parallax-slow">
+        <span class="line-mask"><span class="line-reveal">SAGAR</span></span>
+        <span class="line-mask"><span class="line-reveal">MALIK</span></span>
+      </h1>
+      <div class="hero-subtitle line-mask parallax-fast"><span class="line-reveal">Mr. Interior Designer</span></div>
+    </div>
+  </section>
 
-          <div class="about-manifesto parallax-slow">
-            <div class="line-mask"><span class="line-reveal">User-friendly</span></div>
-            <div class="line-mask"><span class="line-reveal"><em>Designs</em> For</span></div>
-            <div class="line-mask"><span class="line-reveal">Living.</span></div>
-          </div>
-
-          <div class="about-statement line-mask"><span class="line-reveal">— Improving lifestyle and living standards</span></div>
-
-          <!-- LIQUID GLASS COMPONENT -->
-          <div class="liquidGlass-wrapper tilt-card mag-target">
-            <div class="liquidGlass-effect"></div>
-            <div class="liquidGlass-tint"></div>
-            <div class="liquidGlass-shine"></div>
-            <div class="liquidGlass-content">
-              <div class="depth-badge">About Us</div>
-              <p style="color:var(--text); font-size: 1.1rem; line-height: 1.8; transition: color 1.2s ease;">Mr. Interior Designer provides various Interior Design Services. We have been serving Delhi/NCR for more than a year, providing user-friendly designs for improving lifestyle and living standards of individuals, families and business owners by creating healthy, luxurious and sustainable interior spaces/habitats.</p>
-            </div>
-          </div>
-
-          <div class="stat-row">
-            <div class="stat-item line-mask"><div class="line-reveal"><div class="stat-num">14</div><div class="stat-label">Projects Completed</div></div></div>
-            <div class="stat-item line-mask"><div class="line-reveal"><div class="stat-num">7+</div><div class="stat-label">Years in Practice</div></div></div>
-            <div class="stat-item line-mask"><div class="line-reveal"><div class="stat-num">100%</div><div class="stat-label">Satisfaction Rate</div></div></div>
-          </div>
-        </div>
-
-        <div class="img-parallax-wrap mag-target side-enter-right">
-          <img src="me.png" alt="Sagar Malik Portrait" loading="lazy">
-        </div>
-      </div>
-    </section>
-
-    <!-- ══ SERVICES (DARK THEME TRIGGER) ══ -->
-    <section id="services" class="theme-trigger-dark">
-      <span class="tech-label parallax-fast"><span class="line-mask"><span class="line-reveal">FIG. 02 / CAPABILITIES</span></span></span>
-      <h2 class="heading-lg parallax-slow">
-        <span class="line-mask"><span class="line-reveal">Spatial</span></span><br>
-        <span class="line-mask"><span class="line-reveal">Construction.</span></span>
-      </h2>
-
-      <div class="services-grid">
-        <!-- LIQUID GLASS CARD 1 -->
-        <div class="liquidGlass-wrapper tilt-card mag-target side-enter-left">
-          <div class="liquidGlass-effect"></div>
-          <div class="liquidGlass-tint"></div>
-          <div class="liquidGlass-shine"></div>
-          <div class="liquidGlass-content">
-            <span class="sc-num">[ 01 ]</span>
-            <h3 class="sc-title">Interior<br>Architecture</h3>
-            <p class="sc-desc">Comprehensive spatial planning and structural modification. Focusing on raw materiality and brutalist aesthetics to redefine environments.</p>
-          </div>
-        </div>
-
-        <!-- LIQUID GLASS CARD 2 -->
-        <div class="liquidGlass-wrapper tilt-card mag-target side-enter-bottom">
-          <div class="liquidGlass-effect"></div>
-          <div class="liquidGlass-tint"></div>
-          <div class="liquidGlass-shine"></div>
-          <div class="liquidGlass-content">
-            <span class="sc-num">[ 02 ]</span>
-            <h3 class="sc-title">Bespoke<br>Fixtures</h3>
-            <p class="sc-desc">Engineering custom industrial furniture. Utilizing brushed steel, cast concrete, and fluted glass for uncompromising tactile experiences.</p>
-          </div>
-        </div>
-
-        <!-- LIQUID GLASS CARD 3 -->
-        <div class="liquidGlass-wrapper tilt-card mag-target side-enter-right">
-          <div class="liquidGlass-effect"></div>
-          <div class="liquidGlass-tint"></div>
-          <div class="liquidGlass-shine"></div>
-          <div class="liquidGlass-content">
-            <span class="sc-num">[ 03 ]</span>
-            <h3 class="sc-title">Conceptual<br>Visualization</h3>
-            <p class="sc-desc">High-fidelity 3D rendering and material studies. Bridging the gap between conceptual vision and flawless physical execution.</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ══ ARCHIVE (LIGHT THEME TRIGGER) ══ -->
-    <section id="toc" class="theme-trigger-light">
-      <span class="tech-label parallax-fast"><span class="line-mask"><span class="line-reveal">TABLE OF CONTENTS</span></span></span>
-      <h2 class="heading-lg parallax-slow">
-        <span class="line-mask"><span class="line-reveal">The</span></span><br>
-        <span class="line-mask"><span class="line-reveal">Archive.</span></span>
-      </h2>
-
-      <div class="toc-grid side-enter-bottom">
-        <div class="toc-item mag-target">
-          <span class="toc-num">1</span>
-          <div class="img-parallax-wrap toc-img-wrap"><img src="https://images.unsplash.com/photo-1600697395543-ef3ee6e9af7b?auto=format&fit=crop&w=800&q=80" alt="Aurelia Heights" loading="lazy"></div>
-          <span class="toc-title">Aurelia Heights</span>
-        </div>
-        <div class="toc-item mag-target">
-          <span class="toc-num">2</span>
-          <div class="img-parallax-wrap toc-img-wrap"><img src="https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&w=800&q=80" alt="Lumina Lime" loading="lazy"></div>
-          <span class="toc-title">Lumina Lime</span>
-        </div>
-        <div class="toc-item mag-target">
-          <span class="toc-num">3</span>
-          <div class="img-parallax-wrap toc-img-wrap"><img src="https://images.unsplash.com/photo-1581291518857-4e27b48ff24e?auto=format&fit=crop&w=800&q=80" alt="Soliris Cove" loading="lazy"></div>
-          <span class="toc-title">Soliris Cove</span>
-        </div>
-        <div class="toc-item mag-target">
-          <span class="toc-num">4</span>
-          <div class="img-parallax-wrap toc-img-wrap"><img src="https://images.unsplash.com/photo-1631049307264-da0ec9d70304?auto=format&fit=crop&w=800&q=80" alt="Velour Afterhours" loading="lazy"></div>
-          <span class="toc-title">Velour Afterhours</span>
-        </div>
-        <div class="toc-item mag-target">
-          <span class="toc-num">5</span>
-          <div class="img-parallax-wrap toc-img-wrap"><img src="https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=800&q=80" alt="Madame Li Room" loading="lazy"></div>
-          <span class="toc-title">Madame Li Room</span>
-        </div>
-        <div class="toc-item mag-target">
-          <span class="toc-num">6</span>
-          <div class="img-parallax-wrap toc-img-wrap"><img src="https://images.unsplash.com/photo-1606744888344-493238951221?auto=format&fit=crop&w=800&q=80" alt="Vexlo Studio" loading="lazy"></div>
-          <span class="toc-title">Vexlo Studio</span>
-        </div>
-      </div>
-    </section>
-
-    <!-- ══ FOOTER (DARK THEME TRIGGER) ══ -->
-    <footer id="footer" class="theme-trigger-dark">
-      <div class="footer-top side-enter-bottom">
-        <div class="footer-col">
-          <div class="footer-socials">
-            <a href="https://www.instagram.com/mr.interiordesigner/" target="_blank" class="social-circ mag-target"><svg viewBox="0 0 448 512"><path d="M224.1 141c-63.6 0-114.9 51.3-114.9 114.9s51.3 114.9 114.9 114.9S339 319.5 339 255.9 287.7 141 224.1 141zm0 189.6c-41.1 0-74.7-33.5-74.7-74.7s33.5-74.7 74.7-74.7 74.7 33.5 74.7 74.7-33.6 74.7-74.7 74.7zm146.4-194.3c0 14.9-12 26.8-26.8 26.8-14.9 0-26.8-12-26.8-26.8s12-26.8 26.8-26.8 26.8 12 26.8 26.8zm76.1 27.2c-1.7-35.9-9.9-67.7-36.2-93.9-26.2-26.2-58-34.4-93.9-36.2-37-2.1-147.9-2.1-184.9 0-35.8 1.7-67.6 9.9-93.9 36.1s-34.4 58-36.2 93.9c-2.1 37-2.1 147.9 0 184.9 1.7 35.9 9.9 67.7 36.2 93.9s58 34.4 93.9 36.2c37 2.1 147.9 2.1 184.9 0 35.9-1.7 67.7-9.9 93.9-36.2 26.2-26.2 34.4-58 36.2-93.9 2.1-37 2.1-147.8 0-184.8zM398.8 388c-7.8 19.6-22.9 34.7-42.6 42.6-29.5 11.7-99.5 9-132.1 9s-102.7 2.6-132.1-9c-19.6-7.8-34.7-22.9-42.6-42.6-11.7-29.5-9-99.5-9-132.1s-2.6-102.7 9-132.1c7.8-19.6 22.9-34.7 42.6-42.6 29.5-11.7 99.5-9 132.1-9s102.7-2.6 132.1 9c19.6 7.8 34.7 22.9 42.6 42.6 11.7 29.5 9 99.5 9 132.1s2.7 102.7-9 132.1z"/></svg></a>
-            <a href="https://twitter.com/mrinteriordes9r" target="_blank" class="social-circ mag-target"><svg viewBox="0 0 512 512"><path d="M389.2 48h70.6L305.6 224.2 487 464H345L233.7 318.6 106.5 464H35.8L200.7 275.5 26.8 48H172.4L272.9 180.9 389.2 48zM364.4 421.8h39.1L151.1 88h-42L364.4 421.8z"/></svg></a>
-            <a href="https://www.facebook.com/jzzsm" target="_blank" class="social-circ mag-target"><svg viewBox="0 0 320 512"><path d="M279.14 288l14.22-92.66h-88.91v-60.13c0-25.35 12.42-50.06 52.24-50.06h40.42V6.26S260.43 0 225.36 0c-73.22 0-121.08 44.38-121.08 124.72v70.62H22.89V288h81.39v224h100.17V288z"/></svg></a>
-          </div>
-          <div class="footer-address">First Floor, B-182, Block B,<br>Nirman Vihar, Preet Vihar,<br>Delhi, 110092<br><br>+91 96541 19643</div>
-        </div>
-        <div class="footer-col"><h4>Menu</h4><ul><li><a href="#about" class="mag-target">Philosophy</a></li><li><a href="#services" class="mag-target">Services</a></li><li><a href="#toc" class="mag-target">Archive</a></li></ul></div>
-        <div class="footer-col"><h4>Social</h4><ul><li><a href="https://www.instagram.com/mr.interiordesigner/" target="_blank" class="mag-target">Instagram</a></li><li><a href="https://twitter.com/mrinteriordes9r" target="_blank" class="mag-target">Twitter</a></li><li><a href="https://www.facebook.com/jzzsm" target="_blank" class="mag-target">Facebook</a></li></ul></div>
-        <div class="footer-col"><h4>Legal</h4><ul><li><a href="#" class="mag-target">Privacy Policy</a></li><li><a href="#" class="mag-target">Terms of Service</a></li></ul></div>
-      </div>
-
-      <div class="footer-divider">
-        <a href="https://wa.me/919654119643" target="_blank" class="btn-contact mag-target">
-          Initiate Project
-          <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"/></svg>
-        </a>
-      </div>
-
-      <div class="footer-bottom">
-        <div style="max-width:400px;line-height:1.6;">Mr. Interior Designer provides various Interior Design Services.<br>Call or WhatsApp @ +91-9654-11-9643.</div>
-        <div class="footer-bottom-links"><a href="#" class="mag-target">Terms</a><a href="#" class="mag-target">Privacy</a></div>
-      </div>
-
-      <div class="footer-massive parallax-slow">SAGAR MALIK</div>
-    </footer>
-
+  <!-- ══ MARQUEE ══ -->
+  <div class="marquee-section">
+    <div class="marquee-track" id="marqueeTrack"></div>
   </div>
-</div>
+
+  <!-- ══ ABOUT (LIGHT THEME TRIGGER) ══ -->
+  <section id="about" class="theme-trigger-light">
+    <div class="grid-2">
+      <div class="about-editorial side-enter-left">
+        <span class="tech-label parallax-fast"><span class="line-mask"><span class="line-reveal">FIG. 01 / THE ARCHITECT</span></span></span>
+
+        <h2 class="about-manifesto parallax-slow">
+          <div class="line-mask"><span class="line-reveal">User-friendly</span></div>
+          <div class="line-mask"><span class="line-reveal"><em>Designs</em> For</span></div>
+          <div class="line-mask"><span class="line-reveal">Living.</span></div>
+        </h2>
+
+        <div class="about-statement line-mask"><span class="line-reveal">— Improving lifestyle and living standards</span></div>
+
+        <!-- LIQUID GLASS COMPONENT -->
+        <div class="liquidGlass-wrapper tilt-card mag-target">
+          <div class="liquidGlass-effect"></div>
+          <div class="liquidGlass-tint"></div>
+          <div class="liquidGlass-shine"></div>
+          <div class="liquidGlass-content">
+            <div class="depth-badge">About Us</div>
+            <p style="color:var(--text); font-size: 1.1rem; line-height: 1.8; transition: color 1.2s ease;">Mr. Interior Designer provides various Interior Design Services. We have been serving Delhi/NCR for more than a year, providing user-friendly designs for improving lifestyle and living standards of individuals, families and business owners by creating healthy, luxurious and sustainable interior spaces/habitats.</p>
+          </div>
+        </div>
+
+        <div class="stat-row">
+          <div class="stat-item line-mask"><div class="line-reveal"><div class="stat-num">14</div><div class="stat-label">Projects Completed</div></div></div>
+          <div class="stat-item line-mask"><div class="line-reveal"><div class="stat-num">7+</div><div class="stat-label">Years in Practice</div></div></div>
+          <div class="stat-item line-mask"><div class="line-reveal"><div class="stat-num">100%</div><div class="stat-label">Satisfaction Rate</div></div></div>
+        </div>
+      </div>
+
+      <div class="img-parallax-wrap mag-target side-enter-right">
+        <img src="me.png" alt="Sagar Malik Portrait" loading="lazy">
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ SERVICES (DARK THEME TRIGGER) ══ -->
+  <section id="services" class="theme-trigger-dark">
+    <span class="tech-label parallax-fast"><span class="line-mask"><span class="line-reveal">FIG. 02 / CAPABILITIES</span></span></span>
+    <h2 class="heading-lg parallax-slow">
+      <span class="line-mask"><span class="line-reveal">Spatial</span></span><br>
+      <span class="line-mask"><span class="line-reveal">Construction.</span></span>
+    </h2>
+
+    <div class="services-grid">
+      <!-- LIQUID GLASS CARD 1 -->
+      <div class="liquidGlass-wrapper tilt-card mag-target side-enter-left">
+        <div class="liquidGlass-effect"></div>
+        <div class="liquidGlass-tint"></div>
+        <div class="liquidGlass-shine"></div>
+        <div class="liquidGlass-content">
+          <span class="sc-num">[ 01 ]</span>
+          <h3 class="sc-title">Interior<br>Architecture</h3>
+          <p class="sc-desc">Comprehensive spatial planning and structural modification. Focusing on raw materiality and brutalist aesthetics to redefine environments.</p>
+        </div>
+      </div>
+
+      <!-- LIQUID GLASS CARD 2 -->
+      <div class="liquidGlass-wrapper tilt-card mag-target side-enter-bottom">
+        <div class="liquidGlass-effect"></div>
+        <div class="liquidGlass-tint"></div>
+        <div class="liquidGlass-shine"></div>
+        <div class="liquidGlass-content">
+          <span class="sc-num">[ 02 ]</span>
+          <h3 class="sc-title">Bespoke<br>Fixtures</h3>
+          <p class="sc-desc">Engineering custom industrial furniture. Utilizing brushed steel, cast concrete, and fluted glass for uncompromising tactile experiences.</p>
+        </div>
+      </div>
+
+      <!-- LIQUID GLASS CARD 3 -->
+      <div class="liquidGlass-wrapper tilt-card mag-target side-enter-right">
+        <div class="liquidGlass-effect"></div>
+        <div class="liquidGlass-tint"></div>
+        <div class="liquidGlass-shine"></div>
+        <div class="liquidGlass-content">
+          <span class="sc-num">[ 03 ]</span>
+          <h3 class="sc-title">Conceptual<br>Visualization</h3>
+          <p class="sc-desc">High-fidelity 3D rendering and material studies. Bridging the gap between conceptual vision and flawless physical execution.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ ARCHIVE (LIGHT THEME TRIGGER) ══ -->
+  <section id="toc" class="theme-trigger-light">
+    <span class="tech-label parallax-fast"><span class="line-mask"><span class="line-reveal">TABLE OF CONTENTS</span></span></span>
+    <h2 class="heading-lg parallax-slow">
+      <span class="line-mask"><span class="line-reveal">The</span></span><br>
+      <span class="line-mask"><span class="line-reveal">Archive.</span></span>
+    </h2>
+
+    <div class="toc-grid side-enter-bottom">
+      <a href="#" class="toc-item mag-target" aria-label="View Aurelia Heights Project">
+        <span class="toc-num">1</span>
+        <div class="img-parallax-wrap toc-img-wrap"><img src="https://images.unsplash.com/photo-1600697395543-ef3ee6e9af7b?auto=format&fit=crop&w=800&q=80" alt="Aurelia Heights" loading="lazy"></div>
+        <span class="toc-title">Aurelia Heights</span>
+      </a>
+      <a href="#" class="toc-item mag-target" aria-label="View Lumina Lime Project">
+        <span class="toc-num">2</span>
+        <div class="img-parallax-wrap toc-img-wrap"><img src="https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&w=800&q=80" alt="Lumina Lime" loading="lazy"></div>
+        <span class="toc-title">Lumina Lime</span>
+      </a>
+      <a href="#" class="toc-item mag-target" aria-label="View Soliris Cove Project">
+        <span class="toc-num">3</span>
+        <div class="img-parallax-wrap toc-img-wrap"><img src="https://images.unsplash.com/photo-1581291518857-4e27b48ff24e?auto=format&fit=crop&w=800&q=80" alt="Soliris Cove" loading="lazy"></div>
+        <span class="toc-title">Soliris Cove</span>
+      </a>
+      <a href="#" class="toc-item mag-target" aria-label="View Velour Afterhours Project">
+        <span class="toc-num">4</span>
+        <div class="img-parallax-wrap toc-img-wrap"><img src="https://images.unsplash.com/photo-1631049307264-da0ec9d70304?auto=format&fit=crop&w=800&q=80" alt="Velour Afterhours" loading="lazy"></div>
+        <span class="toc-title">Velour Afterhours</span>
+      </a>
+      <a href="#" class="toc-item mag-target" aria-label="View Madame Li Room Project">
+        <span class="toc-num">5</span>
+        <div class="img-parallax-wrap toc-img-wrap"><img src="https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=800&q=80" alt="Madame Li Room" loading="lazy"></div>
+        <span class="toc-title">Madame Li Room</span>
+      </a>
+      <a href="#" class="toc-item mag-target" aria-label="View Vexlo Studio Project">
+        <span class="toc-num">6</span>
+        <div class="img-parallax-wrap toc-img-wrap"><img src="https://images.unsplash.com/photo-1606744888344-493238951221?auto=format&fit=crop&w=800&q=80" alt="Vexlo Studio" loading="lazy"></div>
+        <span class="toc-title">Vexlo Studio</span>
+      </a>
+    </div>
+  </section>
+
+  <!-- ══ FOOTER (DARK THEME TRIGGER) ══ -->
+  <footer id="footer" class="theme-trigger-dark">
+    <div class="footer-top side-enter-bottom">
+      <div class="footer-col">
+        <div class="footer-socials">
+          <a href="https://www.instagram.com/mr.interiordesigner/" target="_blank" aria-label="Instagram" class="social-circ mag-target"><svg viewBox="0 0 448 512"><path d="M224.1 141c-63.6 0-114.9 51.3-114.9 114.9s51.3 114.9 114.9 114.9S339 319.5 339 255.9 287.7 141 224.1 141zm0 189.6c-41.1 0-74.7-33.5-74.7-74.7s33.5-74.7 74.7-74.7 74.7 33.5 74.7 74.7-33.6 74.7-74.7 74.7zm146.4-194.3c0 14.9-12 26.8-26.8 26.8-14.9 0-26.8-12-26.8-26.8s12-26.8 26.8-26.8 26.8 12 26.8 26.8zm76.1 27.2c-1.7-35.9-9.9-67.7-36.2-93.9-26.2-26.2-58-34.4-93.9-36.2-37-2.1-147.9-2.1-184.9 0-35.8 1.7-67.6 9.9-93.9 36.1s-34.4 58-36.2 93.9c-2.1 37-2.1 147.9 0 184.9 1.7 35.9 9.9 67.7 36.2 93.9s58 34.4 93.9 36.2c37 2.1 147.9 2.1 184.9 0 35.9-1.7 67.7-9.9 93.9-36.2 26.2-26.2 34.4-58 36.2-93.9 2.1-37 2.1-147.8 0-184.8zM398.8 388c-7.8 19.6-22.9 34.7-42.6 42.6-29.5 11.7-99.5 9-132.1 9s-102.7 2.6-132.1-9c-19.6-7.8-34.7-22.9-42.6-42.6-11.7-29.5-9-99.5-9-132.1s-2.6-102.7 9-132.1c7.8-19.6 22.9-34.7 42.6-42.6 29.5-11.7 99.5-9 132.1-9s102.7-2.6 132.1 9c19.6 7.8 34.7 22.9 42.6 42.6 11.7 29.5 9 99.5 9 132.1s2.7 102.7-9 132.1z"/></svg></a>
+          <a href="https://twitter.com/mrinteriordes9r" target="_blank" aria-label="Twitter" class="social-circ mag-target"><svg viewBox="0 0 512 512"><path d="M389.2 48h70.6L305.6 224.2 487 464H345L233.7 318.6 106.5 464H35.8L200.7 275.5 26.8 48H172.4L272.9 180.9 389.2 48zM364.4 421.8h39.1L151.1 88h-42L364.4 421.8z"/></svg></a>
+          <a href="https://www.facebook.com/jzzsm" target="_blank" aria-label="Facebook" class="social-circ mag-target"><svg viewBox="0 0 320 512"><path d="M279.14 288l14.22-92.66h-88.91v-60.13c0-25.35 12.42-50.06 52.24-50.06h40.42V6.26S260.43 0 225.36 0c-73.22 0-121.08 44.38-121.08 124.72v70.62H22.89V288h81.39v224h100.17V288z"/></svg></a>
+        </div>
+        <div class="footer-address">First Floor, B-182, Block B,<br>Nirman Vihar, Preet Vihar,<br>Delhi, 110092<br><br>+91 96541 19643</div>
+      </div>
+      <div class="footer-col"><h4>Menu</h4><ul><li><a href="#about" class="mag-target">Philosophy</a></li><li><a href="#services" class="mag-target">Services</a></li><li><a href="#toc" class="mag-target">Archive</a></li></ul></div>
+      <div class="footer-col"><h4>Social</h4><ul><li><a href="https://www.instagram.com/mr.interiordesigner/" target="_blank" class="mag-target">Instagram</a></li><li><a href="https://twitter.com/mrinteriordes9r" target="_blank" class="mag-target">Twitter</a></li><li><a href="https://www.facebook.com/jzzsm" target="_blank" class="mag-target">Facebook</a></li></ul></div>
+      <div class="footer-col"><h4>Legal</h4><ul><li><a href="#" class="mag-target">Privacy Policy</a></li><li><a href="#" class="mag-target">Terms of Service</a></li></ul></div>
+    </div>
+
+    <div class="footer-divider">
+      <a href="https://wa.me/919654119643" target="_blank" class="btn-contact mag-target" aria-label="Initiate Project">
+        Initiate Project
+        <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"/></svg>
+      </a>
+    </div>
+
+    <div class="footer-bottom">
+      <div style="max-width:400px;line-height:1.6;">Mr. Interior Designer provides various Interior Design Services.<br>Call or WhatsApp @ +91-9654-11-9643.</div>
+      <div class="footer-bottom-links"><a href="#" class="mag-target">Terms</a><a href="#" class="mag-target">Privacy</a></div>
+    </div>
+
+    <div class="footer-massive parallax-slow">SAGAR MALIK</div>
+  </footer>
+</main>
 
 <!-- FLOATING WHATSAPP -->
-<a href="https://wa.me/919654119643" class="whatsapp-float mag-target" target="_blank">
+<a href="https://wa.me/919654119643" class="whatsapp-float mag-target" target="_blank" aria-label="Contact on WhatsApp">
   <svg viewBox="0 0 448 512"><path d="M380.9 97.1C339 55.1 283.2 32 223.9 32c-122.4 0-222 99.6-222 222 0 39.1 10.2 77.3 29.6 111L0 480l117.7-30.9c32.4 17.7 68.9 27 106.1 27h.1c122.3 0 224.1-99.6 224.1-222 0-59.3-25.2-115-67.1-157.1zm-157 341.6c-33.2 0-65.7-8.9-94-25.7l-6.7-4-69.8 18.3L72 359.2l-4.4-7c-18.5-29.4-28.2-63.3-28.2-98.2 0-101.7 82.8-184.5 184.6-184.5 49.3 0 95.6 19.2 130.4 54.1 34.8 34.9 56.2 81.2 56.1 130.5 0 101.8-84.9 184.6-186.6 184.6zm101.2-138.2c-5.5-2.8-32.8-16.2-37.9-18-5.1-1.9-8.8-2.8-12.5 2.8-3.7 5.6-14.3 18-17.6 21.8-3.2 3.7-6.5 4.2-12 1.4-32.6-16.3-54-29.1-75.5-66-5.7-9.8 5.7-9.1 16.3-30.3 1.8-3.7.9-6.9-.5-9.7-1.4-2.8-12.5-30.1-17.1-41.2-4.5-10.8-9.1-9.3-12.5-9.5-3.2-.2-6.9-.2-10.6-.2-3.7 0-9.7 1.4-14.8 6.9-5.1 5.6-19.4 19-19.4 46.3 0 27.3 19.9 53.7 22.6 57.4 2.8 3.7 39.1 59.7 94.8 83.8 35.2 15.2 49 16.5 66.6 13.9 10.7-1.6 32.8-13.4 37.4-26.4 4.6-13 4.6-24.1 3.2-26.4-1.3-2.5-5-3.9-10.5-6.6z"/></svg>
 </a>
 
@@ -554,7 +567,11 @@ window.addEventListener('load', () => {
   gsap.ticker.add((time) => { lenis.raf(time * 1000); });
   gsap.ticker.lagSmoothing(0, 0);
 
-  /* ── 2. DYNAMIC THEME SWITCHING ────────────────────────────── */
+  /* ── 2. FIX MOBILE SCROLL LOCK (REFRESH AFTER DOM) ─────────── */
+  // Forces GSAP to recalculate page height after all lazy images map their aspect-ratios
+  setTimeout(() => { ScrollTrigger.refresh(); }, 500);
+
+  /* ── 3. DYNAMIC THEME SWITCHING ────────────────────────────── */
   document.querySelectorAll('.theme-trigger-light').forEach(sec => {
     ScrollTrigger.create({
       trigger: sec, start: "top 50%", end: "bottom 50%",
@@ -565,7 +582,7 @@ window.addEventListener('load', () => {
     });
   });
 
-  /* ── 3. MOBILE MENU & NAVIGATION ───────────────────────────── */
+  /* ── 4. MOBILE MENU & NAVIGATION ───────────────────────────── */
   const mobileDrawer = document.getElementById('mobileDrawer');
   const openMenuBtn = document.getElementById('openMenu');
   const closeMenuBtn = document.getElementById('closeMenu');
@@ -585,7 +602,7 @@ window.addEventListener('load', () => {
     });
   });
 
-  /* ── 4. CUSTOM CURSOR & MAGNETIC BUTTONS ───────────────────── */
+  /* ── 5. CUSTOM CURSOR & MAGNETIC BUTTONS ───────────────────── */
   if (!isTouch) {
     const cDot = document.getElementById('cDot'), cRing = document.getElementById('cRing');
     let mouseX = window.innerWidth/2, mouseY = window.innerHeight/2;
@@ -605,12 +622,12 @@ window.addEventListener('load', () => {
     });
   }
 
-  /* ── 5. MARQUEE BUILD ──────────────────────────────────────── */
+  /* ── 6. MARQUEE BUILD ──────────────────────────────────────── */
   const track = document.getElementById('marqueeTrack');
   const items = ['Interior Design','Mr. Interior Designer','User-Friendly Designs','Delhi / NCR','Sustainable Spaces','Luxurious Habitats','Sagar Malik'];
   track.innerHTML = items.map(t => `<span class="marquee-item"><span class="dot"></span>${t}</span>`).join('').repeat(2); 
 
-  /* ── 6. CINEMATIC VIDEO SCROLL (HERO) ──────────────────────── */
+  /* ── 7. CINEMATIC VIDEO SCROLL (HERO) ──────────────────────── */
   const canvas = document.getElementById("video-canvas");
   const ctx = canvas.getContext("2d", { alpha: false });
   canvas.width = 1920; canvas.height = 1080;
@@ -649,7 +666,7 @@ window.addEventListener('load', () => {
     else { drawFallback(ctx, index / frameCount); }
   }
 
-  /* ── 7. GLOBAL ANIMATIONS & PARALLAX ───────────────────────── */
+  /* ── 8. GLOBAL ANIMATIONS & PARALLAX ───────────────────────── */
   function initApp() {
     gsap.to('#preloader', { yPercent: -100, duration: 1.2, ease: "expo.inOut", delay: 0.2 });
     renderFrame(0);
