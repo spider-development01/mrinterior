@@ -12,7 +12,7 @@
 <meta name="author" content="Sagar Malik">
 <meta name="robots" content="index, follow">
 
-<!-- OPEN GRAPH (SOCIAL SHARING) -->
+<!-- OPEN GRAPH -->
 <meta property="og:title" content="SAGAR MALIK | Cinematic Spatial Design">
 <meta property="og:description" content="Uncompromising spatial construction and luxury interior design serving Delhi/NCR.">
 <meta property="og:type" content="website">
@@ -35,7 +35,7 @@
   
   /* Liquid Glass Variables (Dark) */
   --glass-tint: rgba(10, 10, 10, 0.5);
-  --glass-shine: rgba(255, 255, 255, 0.08);
+  --glass-shine: rgba(255, 255, 255, 0.1);
   --glass-shadow: rgba(0, 0, 0, 0.6);
 
   --font-display: 'Anton', sans-serif;
@@ -52,9 +52,9 @@ body.theme-light {
   --line: rgba(0, 0, 0, 0.08);
   
   /* Liquid Glass Variables (Light) */
-  --glass-tint: rgba(255, 255, 255, 0.45);
+  --glass-tint: rgba(255, 255, 255, 0.5);
   --glass-shine: rgba(255, 255, 255, 0.8);
-  --glass-shadow: rgba(0, 0, 0, 0.08);
+  --glass-shadow: rgba(0, 0, 0, 0.1);
 }
 
 /* ── BASE RESET & LENIS CSS ────────────────────────────────── */
@@ -136,13 +136,14 @@ body.theme-light .nav-bg { background: rgba(255, 255, 255, 0.15); border-bottom:
 .drawer-links a { font-family: var(--font-display); font-size: 3.5rem; line-height: 1; text-transform: uppercase; text-decoration: none; color: var(--text); }
 .drawer-links span { font-family: var(--font-tech); font-size: 0.8rem; color: var(--accent); margin-right: 1rem; }
 
-/* ── HERO: FIXED CINEMATIC VIDEO ───────────────────────────── */
-/* By making this fixed, there is ZERO scroll delay. It is instantly active. */
-#hero-fixed-wrapper {
-  position: fixed; top: 0; left: 0; width: 100%; height: 100dvh;
-  z-index: 1; background: #000; overflow: hidden;
-  will-change: transform, filter, opacity;
-  transform-origin: center center;
+/* ── HERO: STICKY CINEMATIC VIDEO ──────────────────────────── */
+#hero-container { position: relative; width: 100%; background: #000; }
+
+#hero { 
+  position: sticky; top: 0; left: 0; width: 100%; height: 100dvh; 
+  background: #000; overflow: hidden; z-index: 10; 
+  transform-origin: center top; /* For the 3D recede effect */
+  will-change: transform, opacity, border-radius;
 }
 #video-canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: 1; opacity: 0.8; pointer-events: none; }
 .hero-overlay { position: absolute; inset: 0; background: radial-gradient(circle at center, transparent 0%, rgba(0,0,0,0.85) 100%); z-index: 2; pointer-events: none; }
@@ -156,15 +157,15 @@ body.theme-light .nav-bg { background: rgba(255, 255, 255, 0.15); border-bottom:
 .hero-subtitle { font-family: var(--font-tech); font-size: clamp(0.7rem, 1.2vw, 1rem); letter-spacing: 8px; text-transform: uppercase; color: #ccc; margin-top: 1rem; }
 .hero-coords { position: absolute; bottom: 5%; left: 5%; font-family: var(--font-tech); font-size: 0.65rem; letter-spacing: 2px; color: #888; display: flex; flex-direction: column; gap: 0.5rem; border-left: 1px solid var(--accent); padding-left: 1rem; text-align: left; z-index: 10; pointer-events: none; }
 
-/* ── SITE CONTENT (THE MASSIVE GLASS CARD) ─────────────────── */
+/* Spacer controls how long the video scrubs before the site slides up */
+#video-scrub-spacer { width: 100%; height: 250vh; position: relative; z-index: 1; }
+
+/* ── SITE CONTENT WRAPPER (SLIDES UP LIKE A CARD) ──────────── */
 #site-content {
   position: relative; z-index: 20;
-  /* Snappy, cinematic scroll distance */
-  margin-top: 150vh; 
   background-color: var(--bg);
   border-top-left-radius: 40px; border-top-right-radius: 40px;
-  box-shadow: 0 -30px 80px rgba(0,0,0,0.9);
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 -30px 60px rgba(0,0,0,0.9); /* Heavy shadow to separate from video */
   padding-top: 2rem;
   transition: background-color 1.2s cubic-bezier(0.77, 0, 0.175, 1);
 }
@@ -181,7 +182,7 @@ body.theme-light .nav-bg { background: rgba(255, 255, 255, 0.15); border-bottom:
 /* ── USER'S LIQUID GLASS IMPLEMENTATION ────────────────────── */
 .liquidGlass-wrapper {
   position: relative; display: flex; flex-direction: column; overflow: hidden;
-  border-radius: 20px; box-shadow: 0 15px 35px var(--glass-shadow);
+  border-radius: 24px; box-shadow: 0 15px 35px var(--glass-shadow);
   transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 2.2), box-shadow 1.2s ease;
   will-change: transform; z-index: 10;
 }
@@ -309,12 +310,15 @@ footer { padding: 8rem 5% 2rem; border-top: 1px solid var(--line); position: rel
   .whatsapp-float { width: 50px; height: 50px; bottom: 20px; right: 20px; }
   .whatsapp-float svg { width: 24px; height: 24px; }
   
-  /* Mobile specific scrub distance */
-  #site-content { margin-top: 100vh; border-top-left-radius: 20px; border-top-right-radius: 20px; }
+  /* Mobile specific scrub distance - Much shorter so user doesn't scroll forever */
+  #video-scrub-spacer { height: 120vh; }
+  
+  /* Adjust the card border radius for mobile */
+  #site-content, .grid-container { border-top-left-radius: 20px; border-top-right-radius: 20px; }
 
   /* COMPLETELY REMOVE HUGE HERO TEXT ON MOBILE */
   .hero-title { display: none !important; }
-  .hero-subtitle { font-size: 1.1rem; margin-top: 0; background: rgba(0,0,0,0.5); padding: 10px 20px; border-radius: 50px; border: 1px solid rgba(255,255,255,0.1); }
+  .hero-subtitle { font-size: 1.1rem; margin-top: 0; background: rgba(0,0,0,0.5); padding: 10px 20px; border-radius: 50px; border: 1px solid rgba(255,255,255,0.1); display: none;}
   .hero-coords { bottom: 12%; }
 }
 </style>
@@ -345,7 +349,7 @@ footer { padding: 8rem 5% 2rem; border-top: 1px solid var(--line); position: rel
 <!-- NAVBAR (APPLE LIQUID GLASS) -->
 <nav id="navbar">
   <div class="nav-bg"></div>
-  <a href="#" class="logo mag-target" onclick="window.scrollTo(0,0); return false;">SM<span>.</span></a>
+  <a href="#hero-container" class="logo mag-target">SM<span>.</span></a>
   <div class="nav-links">
     <a href="#about" class="mag-target">Philosophy</a>
     <a href="#services" class="mag-target">Services</a>
@@ -370,203 +374,213 @@ footer { padding: 8rem 5% 2rem; border-top: 1px solid var(--line); position: rel
 
 <!-- MAIN SCROLL WRAPPER -->
 <main id="smooth-wrapper">
+  <div id="smooth-content">
 
-  <!-- ══ HERO: FIXED CINEMATIC VIDEO (STAYS IN BACKGROUND) ══ -->
-  <div id="hero-fixed-wrapper">
-    <canvas id="video-canvas"></canvas>
-    <div class="hero-overlay"></div>
+    <!-- ══ HERO CONTAINER (STICKY ARCHITECTURE) ══ -->
+    <div id="hero-container">
+      
+      <!-- The Fixed Video Hero -->
+      <section id="hero">
+        <canvas id="video-canvas"></canvas>
+        <div class="hero-overlay"></div>
+        
+        <div class="hero-coords">
+          <span>[ 28° 38' N, 77° 17' E ]</span>
+          <span>DELHI, NCR</span>
+          <span style="color:var(--accent);">SCALE 1:100</span>
+        </div>
+
+        <div class="hero-content" id="hero-text">
+          <h1 class="hero-title">
+            <span class="line-mask"><span class="line-reveal">SAGAR</span></span>
+            <span class="line-mask"><span class="line-reveal">MALIK</span></span>
+          </h1>
+          <div class="hero-subtitle line-mask"><span class="line-reveal">Mr. Interior Designer</span></div>
+        </div>
+      </section>
+
+      <!-- Spacer sets the duration of the video scrub -->
+      <div id="video-scrub-spacer"></div>
+
+    </div>
+
+    <!-- ══ SITE CONTENT (SLIDES OVER HERO LIKE A CARD) ══ -->
+    <div id="site-content">
     
-    <div class="hero-coords">
-      <span>[ 28° 38' N, 77° 17' E ]</span>
-      <span>DELHI, NCR</span>
-      <span style="color:var(--accent);">SCALE 1:100</span>
-    </div>
+      <!-- TECH GRID (Fades in over content background) -->
+      <div class="grid-container" id="bg-grid">
+        <div class="grid-line-h gl-h1"></div><div class="grid-line-h gl-h2"></div><div class="grid-line-h gl-h3"></div>
+        <div class="grid-line-v gl-v1"></div><div class="grid-line-v gl-v2"></div><div class="grid-line-v gl-v3"></div>
+        <div class="node-sq" style="top:15%;left:10%;"></div><div class="node-sq" style="top:15%;left:50%;"></div><div class="node-sq" style="top:15%;left:90%;"></div>
+        <div class="node-sq" style="top:50%;left:10%;"></div><div class="node-sq" style="top:50%;left:50%;"></div><div class="node-sq" style="top:50%;left:90%;"></div>
+        <div class="node-sq" style="top:85%;left:10%;"></div><div class="node-sq" style="top:85%;left:50%;"></div><div class="node-sq" style="top:85%;left:90%;"></div>
+      </div>
 
-    <div class="hero-content" id="hero-text">
-      <h1 class="hero-title">
-        <span class="line-mask"><span class="line-reveal">SAGAR</span></span>
-        <span class="line-mask"><span class="line-reveal">MALIK</span></span>
-      </h1>
-      <div class="hero-subtitle line-mask"><span class="line-reveal">Mr. Interior Designer</span></div>
-    </div>
-  </div>
+      <!-- ══ MARQUEE ══ -->
+      <div class="marquee-section">
+        <div class="marquee-track" id="marqueeTrack"></div>
+      </div>
 
-  <!-- ══ SITE CONTENT (THE MASSIVE GLASS CARD THAT SLIDES UP) ══ -->
-  <div id="site-content">
-  
-    <!-- TECH GRID (Fades in over content background) -->
-    <div class="grid-container" id="bg-grid">
-      <div class="grid-line-h gl-h1"></div><div class="grid-line-h gl-h2"></div><div class="grid-line-h gl-h3"></div>
-      <div class="grid-line-v gl-v1"></div><div class="grid-line-v gl-v2"></div><div class="grid-line-v gl-v3"></div>
-      <div class="node-sq" style="top:15%;left:10%;"></div><div class="node-sq" style="top:15%;left:50%;"></div><div class="node-sq" style="top:15%;left:90%;"></div>
-      <div class="node-sq" style="top:50%;left:10%;"></div><div class="node-sq" style="top:50%;left:50%;"></div><div class="node-sq" style="top:50%;left:90%;"></div>
-      <div class="node-sq" style="top:85%;left:10%;"></div><div class="node-sq" style="top:85%;left:50%;"></div><div class="node-sq" style="top:85%;left:90%;"></div>
-    </div>
+      <!-- ══ ABOUT (LIGHT THEME TRIGGER) ══ -->
+      <section id="about" class="content-section theme-trigger-light">
+        <div class="grid-2">
+          <div class="about-editorial side-enter-left">
+            <span class="tech-label parallax-fast"><span class="line-mask"><span class="line-reveal">FIG. 01 / THE ARCHITECT</span></span></span>
 
-    <!-- ══ MARQUEE ══ -->
-    <div class="marquee-section">
-      <div class="marquee-track" id="marqueeTrack"></div>
-    </div>
+            <h2 class="about-manifesto parallax-slow">
+              <div class="line-mask"><span class="line-reveal">User-friendly</span></div>
+              <div class="line-mask"><span class="line-reveal"><em>Designs</em> For</span></div>
+              <div class="line-mask"><span class="line-reveal">Living.</span></div>
+            </h2>
 
-    <!-- ══ ABOUT (LIGHT THEME TRIGGER) ══ -->
-    <section id="about" class="content-section theme-trigger-light">
-      <div class="grid-2">
-        <div class="about-editorial side-enter-left">
-          <span class="tech-label parallax-fast"><span class="line-mask"><span class="line-reveal">FIG. 01 / THE ARCHITECT</span></span></span>
+            <div class="about-statement line-mask"><span class="line-reveal">— Improving lifestyle and living standards</span></div>
 
-          <h2 class="about-manifesto parallax-slow">
-            <div class="line-mask"><span class="line-reveal">User-friendly</span></div>
-            <div class="line-mask"><span class="line-reveal"><em>Designs</em> For</span></div>
-            <div class="line-mask"><span class="line-reveal">Living.</span></div>
-          </h2>
+            <!-- LIQUID GLASS COMPONENT -->
+            <div class="liquidGlass-wrapper tilt-card mag-target">
+              <div class="liquidGlass-effect"></div>
+              <div class="liquidGlass-tint"></div>
+              <div class="liquidGlass-shine"></div>
+              <div class="liquidGlass-content">
+                <div class="depth-badge">About Us</div>
+                <p style="color:var(--text); font-size: 1.1rem; line-height: 1.8; transition: color 1.2s ease;">Mr. Interior Designer provides various Interior Design Services. We have been serving Delhi/NCR for more than a year, providing user-friendly designs for improving lifestyle and living standards of individuals, families and business owners by creating healthy, luxurious and sustainable interior spaces/habitats.</p>
+              </div>
+            </div>
 
-          <div class="about-statement line-mask"><span class="line-reveal">— Improving lifestyle and living standards</span></div>
+            <div class="stat-row">
+              <div class="stat-item line-mask"><div class="line-reveal"><div class="stat-num">14</div><div class="stat-label">Projects Completed</div></div></div>
+              <div class="stat-item line-mask"><div class="line-reveal"><div class="stat-num">7+</div><div class="stat-label">Years in Practice</div></div></div>
+              <div class="stat-item line-mask"><div class="line-reveal"><div class="stat-num">100%</div><div class="stat-label">Satisfaction Rate</div></div></div>
+            </div>
+          </div>
 
-          <!-- LIQUID GLASS COMPONENT -->
-          <div class="liquidGlass-wrapper tilt-card mag-target">
+          <div class="img-parallax-wrap mag-target side-enter-right">
+            <img src="me.png" alt="Sagar Malik Portrait" loading="lazy">
+          </div>
+        </div>
+      </section>
+
+      <!-- ══ SERVICES (DARK THEME TRIGGER) ══ -->
+      <section id="services" class="content-section theme-trigger-dark">
+        <span class="tech-label parallax-fast"><span class="line-mask"><span class="line-reveal">FIG. 02 / CAPABILITIES</span></span></span>
+        <h2 class="heading-lg parallax-slow">
+          <span class="line-mask"><span class="line-reveal">Spatial</span></span><br>
+          <span class="line-mask"><span class="line-reveal">Construction.</span></span>
+        </h2>
+
+        <div class="services-grid">
+          <!-- LIQUID GLASS CARD 1 -->
+          <div class="liquidGlass-wrapper tilt-card mag-target side-enter-left">
             <div class="liquidGlass-effect"></div>
             <div class="liquidGlass-tint"></div>
             <div class="liquidGlass-shine"></div>
             <div class="liquidGlass-content">
-              <div class="depth-badge">About Us</div>
-              <p style="color:var(--text); font-size: 1.1rem; line-height: 1.8; transition: color 1.2s ease;">Mr. Interior Designer provides various Interior Design Services. We have been serving Delhi/NCR for more than a year, providing user-friendly designs for improving lifestyle and living standards of individuals, families and business owners by creating healthy, luxurious and sustainable interior spaces/habitats.</p>
+              <span class="sc-num">[ 01 ]</span>
+              <h3 class="sc-title">Interior<br>Architecture</h3>
+              <p class="sc-desc">Comprehensive spatial planning and structural modification. Focusing on raw materiality and brutalist aesthetics to redefine environments.</p>
             </div>
           </div>
 
-          <div class="stat-row">
-            <div class="stat-item line-mask"><div class="line-reveal"><div class="stat-num">14</div><div class="stat-label">Projects Completed</div></div></div>
-            <div class="stat-item line-mask"><div class="line-reveal"><div class="stat-num">7+</div><div class="stat-label">Years in Practice</div></div></div>
-            <div class="stat-item line-mask"><div class="line-reveal"><div class="stat-num">100%</div><div class="stat-label">Satisfaction Rate</div></div></div>
+          <!-- LIQUID GLASS CARD 2 -->
+          <div class="liquidGlass-wrapper tilt-card mag-target side-enter-bottom">
+            <div class="liquidGlass-effect"></div>
+            <div class="liquidGlass-tint"></div>
+            <div class="liquidGlass-shine"></div>
+            <div class="liquidGlass-content">
+              <span class="sc-num">[ 02 ]</span>
+              <h3 class="sc-title">Bespoke<br>Fixtures</h3>
+              <p class="sc-desc">Engineering custom industrial furniture. Utilizing brushed steel, cast concrete, and fluted glass for uncompromising tactile experiences.</p>
+            </div>
+          </div>
+
+          <!-- LIQUID GLASS CARD 3 -->
+          <div class="liquidGlass-wrapper tilt-card mag-target side-enter-right">
+            <div class="liquidGlass-effect"></div>
+            <div class="liquidGlass-tint"></div>
+            <div class="liquidGlass-shine"></div>
+            <div class="liquidGlass-content">
+              <span class="sc-num">[ 03 ]</span>
+              <h3 class="sc-title">Conceptual<br>Visualization</h3>
+              <p class="sc-desc">High-fidelity 3D rendering and material studies. Bridging the gap between conceptual vision and flawless physical execution.</p>
+            </div>
           </div>
         </div>
+      </section>
 
-        <div class="img-parallax-wrap mag-target side-enter-right">
-          <img src="me.png" alt="Sagar Malik Portrait" loading="lazy">
+      <!-- ══ ARCHIVE (LIGHT THEME TRIGGER) ══ -->
+      <section id="toc" class="content-section theme-trigger-light">
+        <span class="tech-label parallax-fast"><span class="line-mask"><span class="line-reveal">TABLE OF CONTENTS</span></span></span>
+        <h2 class="heading-lg parallax-slow">
+          <span class="line-mask"><span class="line-reveal">The</span></span><br>
+          <span class="line-mask"><span class="line-reveal">Archive.</span></span>
+        </h2>
+
+        <div class="toc-grid side-enter-bottom">
+          <a href="#" class="toc-item mag-target" aria-label="View Aurelia Heights Project">
+            <span class="toc-num">1</span>
+            <div class="img-parallax-wrap toc-img-wrap"><img src="https://images.unsplash.com/photo-1600697395543-ef3ee6e9af7b?auto=format&fit=crop&w=800&q=80" alt="Aurelia Heights" loading="lazy"></div>
+            <span class="toc-title">Aurelia Heights</span>
+          </a>
+          <a href="#" class="toc-item mag-target" aria-label="View Lumina Lime Project">
+            <span class="toc-num">2</span>
+            <div class="img-parallax-wrap toc-img-wrap"><img src="https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&w=800&q=80" alt="Lumina Lime" loading="lazy"></div>
+            <span class="toc-title">Lumina Lime</span>
+          </a>
+          <a href="#" class="toc-item mag-target" aria-label="View Soliris Cove Project">
+            <span class="toc-num">3</span>
+            <div class="img-parallax-wrap toc-img-wrap"><img src="https://images.unsplash.com/photo-1581291518857-4e27b48ff24e?auto=format&fit=crop&w=800&q=80" alt="Soliris Cove" loading="lazy"></div>
+            <span class="toc-title">Soliris Cove</span>
+          </a>
+          <a href="#" class="toc-item mag-target" aria-label="View Velour Afterhours Project">
+            <span class="toc-num">4</span>
+            <div class="img-parallax-wrap toc-img-wrap"><img src="https://images.unsplash.com/photo-1631049307264-da0ec9d70304?auto=format&fit=crop&w=800&q=80" alt="Velour Afterhours" loading="lazy"></div>
+            <span class="toc-title">Velour Afterhours</span>
+          </a>
+          <a href="#" class="toc-item mag-target" aria-label="View Madame Li Room Project">
+            <span class="toc-num">5</span>
+            <div class="img-parallax-wrap toc-img-wrap"><img src="https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=800&q=80" alt="Madame Li Room" loading="lazy"></div>
+            <span class="toc-title">Madame Li Room</span>
+          </a>
+          <a href="#" class="toc-item mag-target" aria-label="View Vexlo Studio Project">
+            <span class="toc-num">6</span>
+            <div class="img-parallax-wrap toc-img-wrap"><img src="https://images.unsplash.com/photo-1606744888344-493238951221?auto=format&fit=crop&w=800&q=80" alt="Vexlo Studio" loading="lazy"></div>
+            <span class="toc-title">Vexlo Studio</span>
+          </a>
         </div>
-      </div>
-    </section>
+      </section>
 
-    <!-- ══ SERVICES (DARK THEME TRIGGER) ══ -->
-    <section id="services" class="content-section theme-trigger-dark">
-      <span class="tech-label parallax-fast"><span class="line-mask"><span class="line-reveal">FIG. 02 / CAPABILITIES</span></span></span>
-      <h2 class="heading-lg parallax-slow">
-        <span class="line-mask"><span class="line-reveal">Spatial</span></span><br>
-        <span class="line-mask"><span class="line-reveal">Construction.</span></span>
-      </h2>
-
-      <div class="services-grid">
-        <!-- LIQUID GLASS CARD 1 -->
-        <div class="liquidGlass-wrapper tilt-card mag-target side-enter-left">
-          <div class="liquidGlass-effect"></div>
-          <div class="liquidGlass-tint"></div>
-          <div class="liquidGlass-shine"></div>
-          <div class="liquidGlass-content">
-            <span class="sc-num">[ 01 ]</span>
-            <h3 class="sc-title">Interior<br>Architecture</h3>
-            <p class="sc-desc">Comprehensive spatial planning and structural modification. Focusing on raw materiality and brutalist aesthetics to redefine environments.</p>
+      <!-- ══ FOOTER (DARK THEME TRIGGER) ══ -->
+      <footer id="footer" class="theme-trigger-dark">
+        <div class="footer-top side-enter-bottom">
+          <div class="footer-col">
+            <div class="footer-socials">
+              <a href="https://www.instagram.com/mr.interiordesigner/" target="_blank" aria-label="Instagram" class="social-circ mag-target"><svg viewBox="0 0 448 512"><path d="M224.1 141c-63.6 0-114.9 51.3-114.9 114.9s51.3 114.9 114.9 114.9S339 319.5 339 255.9 287.7 141 224.1 141zm0 189.6c-41.1 0-74.7-33.5-74.7-74.7s33.5-74.7 74.7-74.7 74.7 33.5 74.7 74.7-33.6 74.7-74.7 74.7zm146.4-194.3c0 14.9-12 26.8-26.8 26.8-14.9 0-26.8-12-26.8-26.8s12-26.8 26.8-26.8 26.8 12 26.8 26.8zm76.1 27.2c-1.7-35.9-9.9-67.7-36.2-93.9-26.2-26.2-58-34.4-93.9-36.2-37-2.1-147.9-2.1-184.9 0-35.8 1.7-67.6 9.9-93.9 36.1s-34.4 58-36.2 93.9c-2.1 37-2.1 147.9 0 184.9 1.7 35.9 9.9 67.7 36.2 93.9s58 34.4 93.9 36.2c37 2.1 147.9 2.1 184.9 0 35.9-1.7 67.7-9.9 93.9-36.2 26.2-26.2 34.4-58 36.2-93.9 2.1-37 2.1-147.8 0-184.8zM398.8 388c-7.8 19.6-22.9 34.7-42.6 42.6-29.5 11.7-99.5 9-132.1 9s-102.7 2.6-132.1-9c-19.6-7.8-34.7-22.9-42.6-42.6-11.7-29.5-9-99.5-9-132.1s-2.6-102.7 9-132.1c7.8-19.6 22.9-34.7 42.6-42.6 29.5-11.7 99.5-9 132.1-9s102.7-2.6 132.1 9c19.6 7.8 34.7 22.9 42.6 42.6 11.7 29.5 9 99.5 9 132.1s2.7 102.7-9 132.1z"/></svg></a>
+              <a href="https://twitter.com/mrinteriordes9r" target="_blank" aria-label="Twitter" class="social-circ mag-target"><svg viewBox="0 0 512 512"><path d="M389.2 48h70.6L305.6 224.2 487 464H345L233.7 318.6 106.5 464H35.8L200.7 275.5 26.8 48H172.4L272.9 180.9 389.2 48zM364.4 421.8h39.1L151.1 88h-42L364.4 421.8z"/></svg></a>
+              <a href="https://www.facebook.com/jzzsm" target="_blank" aria-label="Facebook" class="social-circ mag-target"><svg viewBox="0 0 320 512"><path d="M279.14 288l14.22-92.66h-88.91v-60.13c0-25.35 12.42-50.06 52.24-50.06h40.42V6.26S260.43 0 225.36 0c-73.22 0-121.08 44.38-121.08 124.72v70.62H22.89V288h81.39v224h100.17V288z"/></svg></a>
+            </div>
+            <div class="footer-address">First Floor, B-182, Block B,<br>Nirman Vihar, Preet Vihar,<br>Delhi, 110092<br><br>+91 96541 19643</div>
           </div>
+          <div class="footer-col"><h4>Menu</h4><ul><li><a href="#about" class="mag-target">Philosophy</a></li><li><a href="#services" class="mag-target">Services</a></li><li><a href="#toc" class="mag-target">Archive</a></li></ul></div>
+          <div class="footer-col"><h4>Social</h4><ul><li><a href="https://www.instagram.com/mr.interiordesigner/" target="_blank" class="mag-target">Instagram</a></li><li><a href="https://twitter.com/mrinteriordes9r" target="_blank" class="mag-target">Twitter</a></li><li><a href="https://www.facebook.com/jzzsm" target="_blank" class="mag-target">Facebook</a></li></ul></div>
+          <div class="footer-col"><h4>Legal</h4><ul><li><a href="#" class="mag-target">Privacy Policy</a></li><li><a href="#" class="mag-target">Terms of Service</a></li></ul></div>
         </div>
 
-        <!-- LIQUID GLASS CARD 2 -->
-        <div class="liquidGlass-wrapper tilt-card mag-target side-enter-bottom">
-          <div class="liquidGlass-effect"></div>
-          <div class="liquidGlass-tint"></div>
-          <div class="liquidGlass-shine"></div>
-          <div class="liquidGlass-content">
-            <span class="sc-num">[ 02 ]</span>
-            <h3 class="sc-title">Bespoke<br>Fixtures</h3>
-            <p class="sc-desc">Engineering custom industrial furniture. Utilizing brushed steel, cast concrete, and fluted glass for uncompromising tactile experiences.</p>
-          </div>
+        <div class="footer-divider">
+          <a href="https://wa.me/919654119643" target="_blank" class="btn-contact mag-target" aria-label="Initiate Project">
+            Initiate Project
+            <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"/></svg>
+          </a>
         </div>
 
-        <!-- LIQUID GLASS CARD 3 -->
-        <div class="liquidGlass-wrapper tilt-card mag-target side-enter-right">
-          <div class="liquidGlass-effect"></div>
-          <div class="liquidGlass-tint"></div>
-          <div class="liquidGlass-shine"></div>
-          <div class="liquidGlass-content">
-            <span class="sc-num">[ 03 ]</span>
-            <h3 class="sc-title">Conceptual<br>Visualization</h3>
-            <p class="sc-desc">High-fidelity 3D rendering and material studies. Bridging the gap between conceptual vision and flawless physical execution.</p>
-          </div>
+        <div class="footer-bottom">
+          <div style="max-width:400px;line-height:1.6;">Mr. Interior Designer provides various Interior Design Services.<br>Call or WhatsApp @ +91-9654-11-9643.</div>
+          <div class="footer-bottom-links"><a href="#" class="mag-target">Terms</a><a href="#" class="mag-target">Privacy</a></div>
         </div>
-      </div>
-    </section>
 
-    <!-- ══ ARCHIVE (LIGHT THEME TRIGGER) ══ -->
-    <section id="toc" class="content-section theme-trigger-light">
-      <span class="tech-label parallax-fast"><span class="line-mask"><span class="line-reveal">TABLE OF CONTENTS</span></span></span>
-      <h2 class="heading-lg parallax-slow">
-        <span class="line-mask"><span class="line-reveal">The</span></span><br>
-        <span class="line-mask"><span class="line-reveal">Archive.</span></span>
-      </h2>
+        <div class="footer-massive parallax-slow">SAGAR MALIK</div>
+      </footer>
 
-      <div class="toc-grid side-enter-bottom">
-        <a href="#" class="toc-item mag-target" aria-label="View Aurelia Heights Project">
-          <span class="toc-num">1</span>
-          <div class="img-parallax-wrap toc-img-wrap"><img src="https://images.unsplash.com/photo-1600697395543-ef3ee6e9af7b?auto=format&fit=crop&w=800&q=80" alt="Aurelia Heights" loading="lazy"></div>
-          <span class="toc-title">Aurelia Heights</span>
-        </a>
-        <a href="#" class="toc-item mag-target" aria-label="View Lumina Lime Project">
-          <span class="toc-num">2</span>
-          <div class="img-parallax-wrap toc-img-wrap"><img src="https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&w=800&q=80" alt="Lumina Lime" loading="lazy"></div>
-          <span class="toc-title">Lumina Lime</span>
-        </a>
-        <a href="#" class="toc-item mag-target" aria-label="View Soliris Cove Project">
-          <span class="toc-num">3</span>
-          <div class="img-parallax-wrap toc-img-wrap"><img src="https://images.unsplash.com/photo-1581291518857-4e27b48ff24e?auto=format&fit=crop&w=800&q=80" alt="Soliris Cove" loading="lazy"></div>
-          <span class="toc-title">Soliris Cove</span>
-        </a>
-        <a href="#" class="toc-item mag-target" aria-label="View Velour Afterhours Project">
-          <span class="toc-num">4</span>
-          <div class="img-parallax-wrap toc-img-wrap"><img src="https://images.unsplash.com/photo-1631049307264-da0ec9d70304?auto=format&fit=crop&w=800&q=80" alt="Velour Afterhours" loading="lazy"></div>
-          <span class="toc-title">Velour Afterhours</span>
-        </a>
-        <a href="#" class="toc-item mag-target" aria-label="View Madame Li Room Project">
-          <span class="toc-num">5</span>
-          <div class="img-parallax-wrap toc-img-wrap"><img src="https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=800&q=80" alt="Madame Li Room" loading="lazy"></div>
-          <span class="toc-title">Madame Li Room</span>
-        </a>
-        <a href="#" class="toc-item mag-target" aria-label="View Vexlo Studio Project">
-          <span class="toc-num">6</span>
-          <div class="img-parallax-wrap toc-img-wrap"><img src="https://images.unsplash.com/photo-1606744888344-493238951221?auto=format&fit=crop&w=800&q=80" alt="Vexlo Studio" loading="lazy"></div>
-          <span class="toc-title">Vexlo Studio</span>
-        </a>
-      </div>
-    </section>
-
-    <!-- ══ FOOTER (DARK THEME TRIGGER) ══ -->
-    <footer id="footer" class="theme-trigger-dark">
-      <div class="footer-top side-enter-bottom">
-        <div class="footer-col">
-          <div class="footer-socials">
-            <a href="https://www.instagram.com/mr.interiordesigner/" target="_blank" aria-label="Instagram" class="social-circ mag-target"><svg viewBox="0 0 448 512"><path d="M224.1 141c-63.6 0-114.9 51.3-114.9 114.9s51.3 114.9 114.9 114.9S339 319.5 339 255.9 287.7 141 224.1 141zm0 189.6c-41.1 0-74.7-33.5-74.7-74.7s33.5-74.7 74.7-74.7 74.7 33.5 74.7 74.7-33.6 74.7-74.7 74.7zm146.4-194.3c0 14.9-12 26.8-26.8 26.8-14.9 0-26.8-12-26.8-26.8s12-26.8 26.8-26.8 26.8 12 26.8 26.8zm76.1 27.2c-1.7-35.9-9.9-67.7-36.2-93.9-26.2-26.2-58-34.4-93.9-36.2-37-2.1-147.9-2.1-184.9 0-35.8 1.7-67.6 9.9-93.9 36.1s-34.4 58-36.2 93.9c-2.1 37-2.1 147.9 0 184.9 1.7 35.9 9.9 67.7 36.2 93.9s58 34.4 93.9 36.2c37 2.1 147.9 2.1 184.9 0 35.9-1.7 67.7-9.9 93.9-36.2 26.2-26.2 34.4-58 36.2-93.9 2.1-37 2.1-147.8 0-184.8zM398.8 388c-7.8 19.6-22.9 34.7-42.6 42.6-29.5 11.7-99.5 9-132.1 9s-102.7 2.6-132.1-9c-19.6-7.8-34.7-22.9-42.6-42.6-11.7-29.5-9-99.5-9-132.1s-2.6-102.7 9-132.1c7.8-19.6 22.9-34.7 42.6-42.6 29.5-11.7 99.5-9 132.1-9s102.7-2.6 132.1 9c19.6 7.8 34.7 22.9 42.6 42.6 11.7 29.5 9 99.5 9 132.1s2.7 102.7-9 132.1z"/></svg></a>
-            <a href="https://twitter.com/mrinteriordes9r" target="_blank" aria-label="Twitter" class="social-circ mag-target"><svg viewBox="0 0 512 512"><path d="M389.2 48h70.6L305.6 224.2 487 464H345L233.7 318.6 106.5 464H35.8L200.7 275.5 26.8 48H172.4L272.9 180.9 389.2 48zM364.4 421.8h39.1L151.1 88h-42L364.4 421.8z"/></svg></a>
-            <a href="https://www.facebook.com/jzzsm" target="_blank" aria-label="Facebook" class="social-circ mag-target"><svg viewBox="0 0 320 512"><path d="M279.14 288l14.22-92.66h-88.91v-60.13c0-25.35 12.42-50.06 52.24-50.06h40.42V6.26S260.43 0 225.36 0c-73.22 0-121.08 44.38-121.08 124.72v70.62H22.89V288h81.39v224h100.17V288z"/></svg></a>
-          </div>
-          <div class="footer-address">First Floor, B-182, Block B,<br>Nirman Vihar, Preet Vihar,<br>Delhi, 110092<br><br>+91 96541 19643</div>
-        </div>
-        <div class="footer-col"><h4>Menu</h4><ul><li><a href="#about" class="mag-target">Philosophy</a></li><li><a href="#services" class="mag-target">Services</a></li><li><a href="#toc" class="mag-target">Archive</a></li></ul></div>
-        <div class="footer-col"><h4>Social</h4><ul><li><a href="https://www.instagram.com/mr.interiordesigner/" target="_blank" class="mag-target">Instagram</a></li><li><a href="https://twitter.com/mrinteriordes9r" target="_blank" class="mag-target">Twitter</a></li><li><a href="https://www.facebook.com/jzzsm" target="_blank" class="mag-target">Facebook</a></li></ul></div>
-        <div class="footer-col"><h4>Legal</h4><ul><li><a href="#" class="mag-target">Privacy Policy</a></li><li><a href="#" class="mag-target">Terms of Service</a></li></ul></div>
-      </div>
-
-      <div class="footer-divider">
-        <a href="https://wa.me/919654119643" target="_blank" class="btn-contact mag-target" aria-label="Initiate Project">
-          Initiate Project
-          <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"/></svg>
-        </a>
-      </div>
-
-      <div class="footer-bottom">
-        <div style="max-width:400px;line-height:1.6;">Mr. Interior Designer provides various Interior Design Services.<br>Call or WhatsApp @ +91-9654-11-9643.</div>
-        <div class="footer-bottom-links"><a href="#" class="mag-target">Terms</a><a href="#" class="mag-target">Privacy</a></div>
-      </div>
-
-      <div class="footer-massive parallax-slow">SAGAR MALIK</div>
-    </footer>
-
-  </div>
+    </div> <!-- End Site Content -->
+  </div> <!-- End Smooth Content -->
 </main>
 
 <!-- FLOATING WHATSAPP -->
@@ -594,7 +608,7 @@ window.addEventListener('load', () => {
   document.querySelectorAll('.theme-trigger-light').forEach(sec => {
     ScrollTrigger.create({
       trigger: sec, 
-      start: "top 40%", 
+      start: "top 40%", /* Triggers right as the card enters the main view */
       end: "bottom 40%",
       onEnter: () => document.body.classList.add('theme-light'),
       onLeave: () => document.body.classList.remove('theme-light'),
@@ -691,37 +705,30 @@ window.addEventListener('load', () => {
     gsap.to('#preloader', { yPercent: -100, duration: 1.2, ease: "expo.inOut", delay: 0.2 });
     renderFrame(0);
 
-    // Hero Text Reveal (Desktop Only)
+    // Hero Entry (Desktop only text)
     if(!isTouch) {
       gsap.to('.hero-title .line-reveal', { y: '0%', duration: 1.5, ease: "power4.out", stagger: 0.15, delay: 0.8 });
     }
     gsap.to('.hero-subtitle .line-reveal', { y: '0%', duration: 1.5, ease: "power4.out", delay: 1.1 });
 
-    // ── NATIVE CSS SCRUB LOGIC ──
-    // Perfectly mapped to the 150vh / 100vh margin-top of #site-content
-    const scrubDistance = isTouch ? window.innerHeight * 1.0 : window.innerHeight * 1.5; 
-    
-    window.addEventListener('scroll', () => {
-      let scrollY = window.scrollY;
-      
-      // 1. Scrub Video (Clamped so it stops exactly on the last frame)
-      let progress = Math.min(Math.max(scrollY / scrubDistance, 0), 1);
-      let frame = Math.round(progress * (frameCount - 1));
-      renderFrame(frame);
-
-      // 2. Fade Out Text (Fades out quickly in the first 35% of the scroll for a cleaner look)
-      let textOpacity = 1 - (scrollY / (scrubDistance * 0.35));
-      document.getElementById('hero-text').style.opacity = Math.max(0, textOpacity);
+    // Video Scrub linked to the spacer div
+    const playhead = { frame: 0 };
+    gsap.to(playhead, {
+      frame: frameCount - 1, snap: "frame", ease: "none",
+      scrollTrigger: { trigger: "#video-scrub-spacer", start: "top top", end: "bottom bottom", scrub: 1 },
+      onUpdate: () => renderFrame(Math.round(playhead.frame))
     });
 
-    // ── HERO RECEDE EFFECT (THE 3D PUSH BACK) ──
-    // Deepened the scale and blur for a dramatic "Peak Art" cinematic focus pull
-    gsap.to("#hero-fixed-wrapper", {
-      scale: 0.75, opacity: 0.15, filter: "blur(18px)", ease: "none",
+    // Fade out Hero Text as video scrubs
+    gsap.to("#hero-text", { opacity: 0, yPercent: -20, ease: "power2.in", scrollTrigger: { trigger: "#video-scrub-spacer", start: "top top", end: "50% top", scrub: 1 } });
+
+    // Hero Recede Effect: As the card slides up, the video shrinks & dims into the background
+    gsap.to("#hero", {
+      scale: 0.85, opacity: 0.3, borderRadius: "40px", ease: "none",
       scrollTrigger: { trigger: "#site-content", start: "top bottom", end: "top top", scrub: true }
     });
 
-    // Stop canvas rendering when completely covered
+    // Stop canvas rendering when completely covered (Performance boost)
     ScrollTrigger.create({
       trigger: "#site-content", start: "top top",
       onEnter: () => { document.getElementById('video-canvas').style.visibility = 'hidden'; },
@@ -730,7 +737,7 @@ window.addEventListener('load', () => {
 
     // Text Line Reveals
     document.querySelectorAll('.line-reveal').forEach(el => {
-      if(!el.closest('#hero-fixed-wrapper')) { gsap.fromTo(el, { y: '115%' }, { y: '0%', duration: 1.2, ease: "power3.out", scrollTrigger: { trigger: el, start: "top 90%" } }); }
+      if(!el.closest('#hero')) { gsap.fromTo(el, { y: '115%' }, { y: '0%', duration: 1.2, ease: "power3.out", scrollTrigger: { trigger: el, start: "top 90%" } }); }
     });
 
     // Side Entrances
@@ -764,6 +771,9 @@ window.addEventListener('load', () => {
         card.addEventListener('mouseleave', () => { gsap.to(card, { rotationX: 0, rotationY: 0, duration: 0.8, ease: 'elastic.out(1, 0.5)' }); });
       });
     }
+
+    // Force GSAP refresh after DOM stabilizes to completely eliminate mobile scroll locking
+    setTimeout(() => { ScrollTrigger.refresh(); }, 500);
   }
 });
 </script>
