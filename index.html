@@ -159,8 +159,8 @@ body.theme-light .nav-bg { background: rgba(255, 255, 255, 0.15); border-bottom:
 /* ── SITE CONTENT (THE MASSIVE GLASS CARD) ─────────────────── */
 #site-content {
   position: relative; z-index: 20;
-  /* Desktop scroll distance before the card comes up */
-  margin-top: 250vh; 
+  /* Snappy, cinematic scroll distance */
+  margin-top: 150vh; 
   background-color: var(--bg);
   border-top-left-radius: 40px; border-top-right-radius: 40px;
   box-shadow: 0 -30px 80px rgba(0,0,0,0.9);
@@ -309,9 +309,8 @@ footer { padding: 8rem 5% 2rem; border-top: 1px solid var(--line); position: rel
   .whatsapp-float { width: 50px; height: 50px; bottom: 20px; right: 20px; }
   .whatsapp-float svg { width: 24px; height: 24px; }
   
-  /* Mobile specific scrub distance - Much shorter so user doesn't scroll forever */
-  #site-content { margin-top: 120vh; border-top-left-radius: 20px; border-top-right-radius: 20px; }
-  .grid-container { border-top-left-radius: 20px; border-top-right-radius: 20px; }
+  /* Mobile specific scrub distance */
+  #site-content { margin-top: 100vh; border-top-left-radius: 20px; border-top-right-radius: 20px; }
 
   /* COMPLETELY REMOVE HUGE HERO TEXT ON MOBILE */
   .hero-title { display: none !important; }
@@ -388,6 +387,7 @@ footer { padding: 8rem 5% 2rem; border-top: 1px solid var(--line); position: rel
         <span class="line-mask"><span class="line-reveal">SAGAR</span></span>
         <span class="line-mask"><span class="line-reveal">MALIK</span></span>
       </h1>
+      <div class="hero-subtitle line-mask"><span class="line-reveal">Mr. Interior Designer</span></div>
     </div>
   </div>
 
@@ -698,28 +698,26 @@ window.addEventListener('load', () => {
     gsap.to('.hero-subtitle .line-reveal', { y: '0%', duration: 1.5, ease: "power4.out", delay: 1.1 });
 
     // ── NATIVE CSS SCRUB LOGIC ──
-    // Because #hero-fixed-wrapper is position: fixed, we map the scroll position to the video frame perfectly.
-    const scrubDistance = isTouch ? window.innerHeight * 1.2 : window.innerHeight * 2.5; 
+    // Perfectly mapped to the 150vh / 100vh margin-top of #site-content
+    const scrubDistance = isTouch ? window.innerHeight * 1.0 : window.innerHeight * 1.5; 
     
     window.addEventListener('scroll', () => {
       let scrollY = window.scrollY;
       
-      // 1. Scrub Video
-      if (scrollY <= scrubDistance) {
-        let progress = scrollY / scrubDistance;
-        let frame = Math.round(progress * (frameCount - 1));
-        renderFrame(frame);
-      }
+      // 1. Scrub Video (Clamped so it stops exactly on the last frame)
+      let progress = Math.min(Math.max(scrollY / scrubDistance, 0), 1);
+      let frame = Math.round(progress * (frameCount - 1));
+      renderFrame(frame);
 
-      // 2. Fade Out Text
-      let textOpacity = 1 - (scrollY / (scrubDistance * 0.5));
+      // 2. Fade Out Text (Fades out quickly in the first 35% of the scroll for a cleaner look)
+      let textOpacity = 1 - (scrollY / (scrubDistance * 0.35));
       document.getElementById('hero-text').style.opacity = Math.max(0, textOpacity);
     });
 
     // ── HERO RECEDE EFFECT (THE 3D PUSH BACK) ──
-    // As the site-content slides up over the fixed video, the video shrinks & blurs
+    // Deepened the scale and blur for a dramatic "Peak Art" cinematic focus pull
     gsap.to("#hero-fixed-wrapper", {
-      scale: 0.85, opacity: 0.2, filter: "blur(10px)", ease: "none",
+      scale: 0.75, opacity: 0.15, filter: "blur(18px)", ease: "none",
       scrollTrigger: { trigger: "#site-content", start: "top bottom", end: "top top", scrub: true }
     });
 
